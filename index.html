@@ -1,387 +1,330 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ヨリミチライブラリ</title>
-  <style>
-    *{margin:0;padding:0;box-sizing:border-box;}
-    :root{
-      --wood1:#C8955A; --wood2:#A0714A; --wood3:#7B5234;
-      --shelf:#E8C99A; --shelf-shadow:#B89070;
-      --book1:#FF8FAB; --book2:#A78BFA; --book3:#6EE7B7;
-      --book4:#FCD34D; --book5:#60A5FA; --book6:#F9A8D4;
-      --book7:#86EFAC; --book8:#FCA5A5; --book9:#C4B5FD;
-      --book10:#6EE7B7; --book11:#FDE68A; --book12:#93C5FD;
-      --pink:#FFB7C5; --purple:#C9B8FF; --yellow:#FFE999;
-      --mint:#B5EAD7; --blue:#B5D8FF; --peach:#FFDAB9;
-      --text:#3D2C4E; --subtext:#9D8AAE;
-      --bg:#FDF6EC; --white:#FFFFFF; --border:#F0E6FF;
-      --wall:#FFF8EE;
-    }
-    body{font-family:'Hiragino Kaku Gothic ProN','Meiryo',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ヨリミチライブラリ</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --wood1:#C8955A;--wood2:#A0714A;--wood3:#7B5234;
+  --shelf:#E8C99A;--shelf-shadow:#B89070;
+  --pink:#FFB7C5;--purple:#C9B8FF;--yellow:#FFE999;
+  --mint:#B5EAD7;--blue:#B5D8FF;--peach:#FFDAB9;
+  --text:#3D2C4E;--subtext:#9D8AAE;
+  --bg:#FDF6EC;--border:#F0E6FF;--wall:#FFF8EE;
+}
+body{font-family:'Hiragino Kaku Gothic ProN','Meiryo',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+.screen{display:none;min-height:100vh;flex-direction:column;}
+.screen.active{display:flex;}
 
-    .screen{display:none;min-height:100vh;flex-direction:column;}
-    .screen.active{display:flex;}
+/* ===== ONBOARDING ===== */
+#screen-onboarding{
+  background:linear-gradient(180deg,#FFF3E0 0%,#FDE8C8 100%);
+  align-items:center;justify-content:center;text-align:center;padding:40px 24px;
+  position:relative;overflow:hidden;
+}
+#screen-onboarding::before{content:'';position:absolute;bottom:0;left:0;right:0;height:100px;background:var(--wood1);}
+#screen-onboarding::after{content:'';position:absolute;bottom:92px;left:0;right:0;height:10px;background:var(--wood2);}
+.ob-books{position:absolute;bottom:96px;left:0;right:0;display:flex;align-items:flex-end;justify-content:center;gap:3px;padding:0 10px;z-index:1;}
+.ob-book{border-radius:2px 2px 0 0;font-size:.4rem;color:rgba(255,255,255,.9);font-weight:800;display:flex;align-items:flex-end;justify-content:center;padding-bottom:3px;}
+.mascot{font-size:4rem;margin-bottom:6px;animation:bounce 2s infinite;position:relative;z-index:2;}
+@keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+.logo{font-size:2rem;font-weight:900;background:linear-gradient(135deg,#C8955A,#A78BFA);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px;position:relative;z-index:2;}
+.tagline{font-size:.85rem;color:#8B6340;margin-bottom:24px;line-height:1.7;position:relative;z-index:2;}
+.shock-box{background:white;border-radius:24px;padding:22px 20px;max-width:340px;margin:0 auto 24px;box-shadow:0 8px 32px rgba(180,120,60,.15);border:2px solid #F0D9B5;position:relative;z-index:2;}
+.shock-number{font-size:4rem;font-weight:900;line-height:1;background:linear-gradient(135deg,#C8955A,#A78BFA);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.divider{height:1px;background:#F0D9B5;margin:12px 0;}
+.pbar-wrap{background:#F0D9B5;border-radius:100px;height:10px;margin:10px 0 5px;overflow:hidden;}
+.pbar-fill{height:100%;border-radius:100px;background:linear-gradient(90deg,#C8955A,#A78BFA);}
+.shock-hl{color:#C8955A;font-weight:900;font-size:1.15rem;}
+.btn{border:none;border-radius:100px;font-weight:800;cursor:pointer;transition:transform .2s,box-shadow .2s;font-family:inherit;}
+.btn-primary{background:linear-gradient(135deg,#C8955A,#A78BFA);color:white;padding:16px 40px;font-size:1rem;width:100%;max-width:300px;box-shadow:0 6px 20px rgba(200,149,90,.35);position:relative;z-index:2;}
+.btn-primary:hover{transform:translateY(-2px);}
 
-    /* ===== ONBOARDING ===== */
-    #screen-onboarding{
-      background:linear-gradient(180deg,#FFF3E0 0%,#FDE8C8 100%);
-      align-items:center;justify-content:center;text-align:center;padding:40px 24px;
-      position:relative;overflow:hidden;
-    }
-    #screen-onboarding::before{
-      content:'';position:absolute;bottom:0;left:0;right:0;height:120px;
-      background:var(--wood1);border-radius:0;
-    }
-    #screen-onboarding::after{
-      content:'';position:absolute;bottom:110px;left:0;right:0;height:12px;
-      background:var(--wood2);
-    }
-    .ob-books{
-      position:absolute;bottom:115px;left:0;right:0;
-      display:flex;align-items:flex-end;justify-content:center;gap:4px;padding:0 20px;
-      z-index:1;
-    }
-    .ob-book{
-      width:28px;border-radius:3px 3px 0 0;
-      display:flex;align-items:flex-end;justify-content:center;
-      font-size:0.5rem;color:white;font-weight:700;padding-bottom:4px;
-      writing-mode:vertical-rl;text-orientation:mixed;
-    }
-    .ob-content{position:relative;z-index:2;}
-    .mascot{font-size:4rem;margin-bottom:8px;animation:bounce 2s infinite;}
-    @keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
-    .logo{
-      font-size:2rem;font-weight:900;
-      background:linear-gradient(135deg,#C8955A,#A78BFA);
-      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-      margin-bottom:6px;
-    }
-    .tagline{font-size:0.85rem;color:#8B6340;margin-bottom:28px;line-height:1.7;}
-    .shock-box{
-      background:white;border-radius:24px;padding:24px 22px;
-      max-width:340px;margin:0 auto 24px;
-      box-shadow:0 8px 32px rgba(180,120,60,.15);
-      border:2px solid #F0D9B5;
-    }
-    .shock-number{
-      font-size:4.5rem;font-weight:900;line-height:1;
-      background:linear-gradient(135deg,#C8955A,#A78BFA);
-      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-    }
-    .shock-unit{font-size:1rem;color:var(--subtext);margin-bottom:12px;}
-    .divider{height:1px;background:#F0D9B5;margin:14px 0;}
-    .pbar-wrap{background:#F0D9B5;border-radius:100px;height:10px;margin:10px 0 5px;overflow:hidden;}
-    .pbar-fill{height:100%;border-radius:100px;background:linear-gradient(90deg,#C8955A,#A78BFA);transition:width 1s ease;}
-    .shock-text{font-size:0.9rem;color:var(--text);margin-top:10px;line-height:1.7;}
-    .shock-hl{color:#C8955A;font-weight:900;font-size:1.15rem;}
-    .btn{border:none;border-radius:100px;font-weight:800;cursor:pointer;transition:transform .2s,box-shadow .2s;font-family:inherit;}
-    .btn-primary{
-      background:linear-gradient(135deg,#C8955A,#A78BFA);color:white;
-      padding:16px 40px;font-size:1rem;width:100%;max-width:300px;
-      box-shadow:0 6px 20px rgba(200,149,90,.35);
-    }
-    .btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(200,149,90,.45);}
+/* ===== NAV ===== */
+.nav-bar{background:var(--wood2);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 3px 12px rgba(100,60,20,.3);}
+.nav-logo{font-size:1.05rem;font-weight:900;color:var(--shelf);}
+.nav-pts{background:var(--yellow);border-radius:100px;padding:5px 14px;font-size:.78rem;font-weight:800;color:#7a5c00;}
 
-    /* ===== NAV ===== */
-    .nav-bar{
-      background:var(--wood2);padding:14px 20px;
-      display:flex;align-items:center;justify-content:space-between;
-      position:sticky;top:0;z-index:100;
-      box-shadow:0 3px 12px rgba(100,60,20,.3);
-    }
-    .nav-logo{font-size:1.05rem;font-weight:900;color:var(--shelf);}
-    .nav-pts{background:var(--yellow);border-radius:100px;padding:5px 14px;font-size:0.78rem;font-weight:800;color:#7a5c00;}
+/* ===== CONTENT ===== */
+.content{flex:1;overflow-y:auto;padding:0 0 100px;}
 
-    /* ===== CONTENT ===== */
-    .content{flex:1;overflow-y:auto;padding:0 0 100px;}
+/* ===== WORLD CARD ===== */
+.library-hero{background:linear-gradient(180deg,#FFF8EE,#FDE8C8);padding:16px 16px 0;}
+.world-card{background:linear-gradient(135deg,#C8955A,#A78BFA);border-radius:20px;padding:16px 18px;margin-bottom:0;color:white;box-shadow:0 6px 20px rgba(200,149,90,.3);}
+.world-pct{font-size:2.6rem;font-weight:900;}
+.world-bar{background:rgba(255,255,255,.35);border-radius:100px;height:8px;margin-top:10px;overflow:hidden;}
+.world-bar-fill{height:100%;border-radius:100px;background:white;width:2.4%;}
 
-    /* ===== LIBRARY HERO ===== */
-    .library-hero{
-      background:linear-gradient(180deg,#FFF8EE 0%,#FDE8C8 100%);
-      padding:20px 20px 0;
-      position:relative;
-    }
-    .world-card{
-      background:linear-gradient(135deg,#C8955A,#A78BFA);
-      border-radius:20px;padding:18px 20px;margin-bottom:20px;color:white;
-      box-shadow:0 6px 20px rgba(200,149,90,.3);
-    }
-    .world-pct{font-size:2.8rem;font-weight:900;color:white;}
-    .world-lbl{font-size:0.75rem;color:rgba(255,255,255,.9);margin-top:2px;}
-    .world-bar{background:rgba(255,255,255,.35);border-radius:100px;height:8px;margin-top:12px;overflow:hidden;}
-    .world-bar-fill{height:100%;border-radius:100px;background:white;width:2.4%;}
+/* ===== BOOKSHELF ===== */
+.shelf-section{background:#D4A96A;padding:16px 0 0;}
+.shelf-header{padding:0 16px 12px;font-size:.9rem;font-weight:800;color:#5a3a1a;display:flex;align-items:center;gap:6px;}
 
-    /* ===== BOOKSHELF ===== */
-    .shelf-section{
-      background:var(--wall);
-      padding:0 0 8px;
-    }
-    .shelf-label{
-      padding:16px 20px 8px;
-      font-size:0.9rem;font-weight:800;color:var(--wood2);
-      display:flex;align-items:center;gap:6px;
-    }
-    .shelf-row{
-      position:relative;
-      padding:0 12px;
-      margin-bottom:4px;
-    }
-    .shelf-board{
-      display:flex;align-items:flex-end;gap:3px;
-      padding:8px 8px 0;
-      min-height:90px;
-    }
-    .shelf-plank{
-      position:absolute;bottom:0;left:0;right:0;height:14px;
-      background:linear-gradient(180deg,var(--shelf) 0%,var(--shelf-shadow) 100%);
-      border-radius:2px;
-      box-shadow:0 4px 8px rgba(120,80,40,.2);
-    }
-    .shelf-plank::before{
-      content:'';position:absolute;top:0;left:0;right:0;height:2px;
-      background:rgba(255,255,255,.4);border-radius:2px 2px 0 0;
-    }
-    .book-spine{
-      flex-shrink:0;
-      border-radius:3px 3px 0 0;
-      display:flex;align-items:center;justify-content:center;
-      cursor:pointer;
-      transition:transform .2s,box-shadow .2s;
-      position:relative;
-      overflow:hidden;
-    }
-    .book-spine:hover{transform:translateY(-8px);box-shadow:0 8px 16px rgba(0,0,0,.2);}
-    .book-spine.locked{filter:grayscale(.7) opacity(.5);cursor:default;}
-    .book-spine.locked:hover{transform:none;box-shadow:none;}
-    .book-spine::after{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:rgba(0,0,0,.15);border-radius:3px 0 0 3px;}
-    .book-title{
-      writing-mode:vertical-rl;text-orientation:mixed;
-      font-size:0.52rem;font-weight:800;color:white;
-      text-shadow:0 1px 2px rgba(0,0,0,.3);
-      padding:6px 0;
-      letter-spacing:.05em;
-    }
-    .book-lock{font-size:0.7rem;position:absolute;top:4px;right:3px;}
+.shelf-row{
+  position:relative;
+  background:linear-gradient(180deg,#C8904A 0%,#B07D38 40%,#9A6B28 100%);
+  padding:12px 10px 0;
+  margin-bottom:0;
+}
+.shelf-row::after{
+  content:'';display:block;height:18px;
+  background:linear-gradient(180deg,#E8C070 0%,#C89040 50%,#A07020 100%);
+  box-shadow:0 4px 12px rgba(80,40,0,.4);
+  margin:0 -10px;
+}
+.shelf-row::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:6px;
+  background:linear-gradient(180deg,rgba(255,255,255,.15),transparent);
+}
+.books-grid{display:flex;gap:8px;align-items:flex-end;overflow-x:visible;padding-bottom:4px;}
 
-    /* ===== TABS ===== */
-    .tab-wrap{padding:16px 20px 0;}
-    .switch-row{
-      display:flex;gap:6px;margin-bottom:16px;
-      background:white;padding:6px;border-radius:16px;
-      box-shadow:0 2px 8px rgba(180,150,255,.1);
-    }
-    .switch-btn{
-      flex:1;padding:10px 6px;border-radius:12px;border:none;
-      background:transparent;color:var(--subtext);font-size:0.75rem;
-      font-weight:700;cursor:pointer;transition:all .2s;font-family:inherit;
-    }
-    .switch-btn.active{
-      background:linear-gradient(135deg,#C8955A,#A78BFA);color:white;
-      box-shadow:0 3px 10px rgba(200,149,90,.3);
-    }
-    .tab-content{display:none;}
-    .tab-content.active{display:block;}
-    .sec-title{font-size:0.95rem;font-weight:800;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:6px;}
+/* ===== BOOK CARD (cover visible) ===== */
+.book-card{
+  flex-shrink:0;width:72px;
+  border-radius:4px 8px 8px 4px;
+  overflow:hidden;cursor:pointer;
+  position:relative;
+  box-shadow:3px 3px 10px rgba(0,0,0,.35),-1px 0 0 rgba(0,0,0,.2);
+  transition:transform .2s,box-shadow .2s;
+  transform-origin:bottom center;
+}
+.book-card:hover{transform:translateY(-12px) scale(1.05);box-shadow:4px 12px 20px rgba(0,0,0,.4);}
+.book-card.locked{filter:brightness(.55) saturate(.3);cursor:default;}
+.book-card.locked:hover{transform:none;box-shadow:3px 3px 10px rgba(0,0,0,.35);}
 
-    /* ===== MENTOR CARDS ===== */
-    .mentor-grid{display:flex;flex-direction:column;gap:12px;margin-bottom:20px;}
-    .mentor-card{
-      background:white;border-radius:20px;padding:16px;
-      display:flex;gap:14px;align-items:flex-start;
-      box-shadow:0 4px 14px rgba(180,150,255,.1);
-      border:2px solid var(--border);cursor:pointer;
-      transition:all .2s;
-    }
-    .mentor-card:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(180,150,255,.18);border-color:var(--purple);}
-    .face-wrap{position:relative;flex-shrink:0;}
-    .face{
-      width:64px;height:64px;border-radius:50%;
-      display:flex;align-items:center;justify-content:center;
-      font-size:2.2rem;border:3px solid white;
-      box-shadow:0 4px 12px rgba(0,0,0,.12);
-    }
-    .face-badge{
-      position:absolute;bottom:-2px;right:-2px;
-      width:20px;height:20px;border-radius:50%;
-      background:var(--yellow);border:2px solid white;
-      display:flex;align-items:center;justify-content:center;
-      font-size:0.65rem;
-    }
-    .mentor-info{flex:1;}
-    .mentor-name{font-size:0.95rem;font-weight:800;color:var(--text);margin-bottom:2px;}
-    .mentor-job{font-size:0.75rem;color:var(--subtext);margin-bottom:6px;}
-    .mentor-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px;}
-    .tag{
-      background:var(--border);border-radius:100px;
-      padding:3px 8px;font-size:0.62rem;font-weight:700;color:var(--subtext);
-    }
-    .tag.pink{background:#FFE4ED;color:#D05080;}
-    .tag.purple{background:#EDE9FE;color:#7C5CBF;}
-    .tag.green{background:#D1FAE5;color:#065F46;}
-    .mentor-match{
-      display:flex;align-items:center;gap:6px;
-      font-size:0.72rem;color:var(--subtext);
-    }
-    .match-bar{flex:1;height:6px;background:var(--border);border-radius:100px;overflow:hidden;}
-    .match-fill{height:100%;border-radius:100px;background:linear-gradient(90deg,#FF85A1,#A98BFF);}
-    .mentor-btn{
-      background:linear-gradient(135deg,#C8955A,#A78BFA);color:white;
-      border:none;border-radius:12px;padding:8px 14px;
-      font-size:0.75rem;font-weight:800;cursor:pointer;
-      font-family:inherit;white-space:nowrap;flex-shrink:0;
-    }
+.book-cover{
+  width:72px;
+  padding:8px 6px 6px;
+  display:flex;flex-direction:column;
+  position:relative;overflow:hidden;
+}
+.book-cover::before{content:'';position:absolute;top:0;left:0;width:5px;height:100%;background:rgba(0,0,0,.2);}
+.book-cover-num{font-size:.5rem;font-weight:900;color:rgba(255,255,255,.7);letter-spacing:.1em;margin-bottom:4px;}
+.book-cover-emoji{font-size:1.8rem;margin-bottom:4px;display:block;}
+.book-cover-title{font-size:.55rem;font-weight:900;color:white;line-height:1.3;text-shadow:0 1px 3px rgba(0,0,0,.4);margin-bottom:3px;}
+.book-cover-sub{font-size:.45rem;color:rgba(255,255,255,.85);line-height:1.3;}
+.book-cover-tag{
+  background:rgba(255,255,255,.25);border-radius:100px;
+  padding:2px 5px;font-size:.42rem;font-weight:800;color:white;
+  display:inline-block;margin-top:4px;
+}
+.book-lock-overlay{
+  position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:rgba(0,0,0,.1);
+}
+.book-lock-icon{font-size:1.4rem;}
+.book-lock-txt{font-size:.45rem;color:rgba(255,255,255,.8);font-weight:700;margin-top:2px;text-align:center;}
 
-    /* ===== QUEST CARDS ===== */
-    .quest-list{display:flex;flex-direction:column;gap:10px;}
-    .quest-card{
-      background:white;border-radius:18px;padding:14px 16px;
-      display:flex;align-items:center;gap:12px;cursor:pointer;
-      transition:all .2s;box-shadow:0 3px 10px rgba(180,150,255,.08);
-      border:2px solid transparent;
-    }
-    .quest-card:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(180,150,255,.15);border-color:var(--border);}
-    .quest-card.done{opacity:.5;}
-    .q-icon{width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;}
-    .q-icon.daily{background:#FFF3B0;} .q-icon.weekly{background:#E8E0FF;} .q-icon.event{background:#B5EAD7;} .q-icon.challenge{background:#FFD6E0;} .q-icon.done-bg{background:#D4F5E9;}
-    .q-type{font-size:0.62rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;}
-    .q-type.daily{color:#B8860B;} .q-type.weekly{color:#7C5CBF;} .q-type.event{color:#2D9E6B;} .q-type.challenge{color:#D05080;} .q-type.done-c{color:#2D9E6B;}
-    .q-title{font-size:0.87rem;font-weight:700;color:var(--text);line-height:1.4;}
-    .q-reward{font-size:0.68rem;color:var(--subtext);margin-top:3px;}
-    .q-badge{border-radius:10px;padding:5px 10px;font-size:0.68rem;font-weight:800;white-space:nowrap;flex-shrink:0;}
-    .q-badge.new{background:#FFE4ED;color:#D05080;} .q-badge.timer{background:#E8E0FF;color:#7C5CBF;} .q-badge.event-b{background:#B5EAD7;color:#2D9E6B;} .q-badge.done-b{background:#D4F5E9;color:#2D9E6B;} .q-badge.pts{background:var(--yellow);color:#7a5c00;}
+/* ===== TABS ===== */
+.tab-wrap{padding:14px 16px 0;}
+.switch-row{display:flex;gap:6px;margin-bottom:14px;background:white;padding:5px;border-radius:16px;box-shadow:0 2px 8px rgba(180,150,255,.1);}
+.switch-btn{flex:1;padding:9px 4px;border-radius:12px;border:none;background:transparent;color:var(--subtext);font-size:.72rem;font-weight:700;cursor:pointer;transition:all .2s;font-family:inherit;}
+.switch-btn.active{background:linear-gradient(135deg,#C8955A,#A78BFA);color:white;box-shadow:0 3px 10px rgba(200,149,90,.3);}
+.tab-content{display:none;}
+.tab-content.active{display:block;}
+.sec-title{font-size:.92rem;font-weight:800;color:var(--text);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
 
-    /* ===== POINT ===== */
-    .pt-banner{background:var(--yellow);border-radius:18px;padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;gap:12px;box-shadow:0 3px 12px rgba(255,220,100,.3);border:2px solid #FFD966;}
-    .pt-title{font-size:0.92rem;font-weight:800;color:#5a4000;}
-    .pt-sub{font-size:0.72rem;color:#7a5c00;margin-top:2px;}
-    .pt-count{margin-left:auto;font-size:1.5rem;font-weight:900;color:#5a4000;white-space:nowrap;}
-    .reward-list{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
-    .reward-card{background:white;border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:12px;box-shadow:0 3px 10px rgba(180,150,255,.08);border:2px solid var(--border);}
-    .reward-icon{font-size:2rem;flex-shrink:0;}
-    .reward-title{font-size:0.88rem;font-weight:700;color:var(--text);}
-    .reward-need{font-size:0.72rem;color:var(--subtext);margin-top:2px;}
-    .reward-badge{margin-left:auto;background:var(--yellow);border-radius:100px;padding:5px 12px;font-size:0.72rem;font-weight:800;color:#7a5c00;white-space:nowrap;}
-    .reward-badge.locked{background:#F0E6FF;color:var(--subtext);}
+/* ===== MENTOR CARDS ===== */
+.mentor-grid{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
+.mentor-card{background:white;border-radius:18px;padding:14px;display:flex;gap:12px;align-items:flex-start;box-shadow:0 3px 12px rgba(180,150,255,.1);border:2px solid var(--border);cursor:pointer;transition:all .2s;}
+.mentor-card:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(180,150,255,.18);border-color:var(--purple);}
+.face-wrap{position:relative;flex-shrink:0;}
+.face{width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2rem;border:3px solid white;box-shadow:0 4px 12px rgba(0,0,0,.12);}
+.face-badge{position:absolute;bottom:-2px;right:-2px;width:18px;height:18px;border-radius:50%;background:var(--yellow);border:2px solid white;display:flex;align-items:center;justify-content:center;font-size:.6rem;}
+.mentor-name{font-size:.9rem;font-weight:800;color:var(--text);margin-bottom:2px;}
+.mentor-job{font-size:.72rem;color:var(--subtext);margin-bottom:5px;}
+.mentor-tags{display:flex;flex-wrap:wrap;gap:3px;margin-bottom:6px;}
+.tag{background:var(--border);border-radius:100px;padding:2px 7px;font-size:.6rem;font-weight:700;color:var(--subtext);}
+.tag.pink{background:#FFE4ED;color:#D05080;}.tag.purple{background:#EDE9FE;color:#7C5CBF;}.tag.green{background:#D1FAE5;color:#065F46;}
+.mentor-match{display:flex;align-items:center;gap:5px;font-size:.68rem;color:var(--subtext);}
+.match-bar{flex:1;height:5px;background:var(--border);border-radius:100px;overflow:hidden;}
+.match-fill{height:100%;border-radius:100px;background:linear-gradient(90deg,#FF85A1,#A98BFF);}
+.mentor-btn{background:linear-gradient(135deg,#C8955A,#A78BFA);color:white;border:none;border-radius:12px;padding:8px 12px;font-size:.72rem;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap;flex-shrink:0;}
 
-    /* ===== EVENTS ===== */
-    .event-card{background:white;border-radius:18px;padding:16px;margin-bottom:10px;box-shadow:0 3px 10px rgba(180,150,255,.08);border:2px solid var(--border);cursor:pointer;transition:all .2s;}
-    .event-card:hover{transform:translateY(-2px);border-color:var(--mint);}
-    .event-tag{display:inline-block;border-radius:100px;padding:3px 10px;font-size:0.65rem;font-weight:800;margin-bottom:8px;}
-    .event-tag.online{background:var(--blue);color:#1a5a9e;} .event-tag.offline{background:var(--peach);color:#9e4a1a;} .event-tag.vol{background:var(--mint);color:#1a7e4e;}
-    .event-title{font-size:0.92rem;font-weight:800;color:var(--text);margin-bottom:4px;}
-    .event-meta{font-size:0.72rem;color:var(--subtext);}
-    .event-pts{display:inline-block;background:var(--yellow);border-radius:100px;padding:4px 10px;font-size:0.68rem;font-weight:800;color:#7a5c00;margin-top:8px;}
+/* ===== QUEST ===== */
+.quest-list{display:flex;flex-direction:column;gap:9px;}
+.quest-card{background:white;border-radius:16px;padding:13px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:all .2s;box-shadow:0 2px 8px rgba(180,150,255,.08);border:2px solid transparent;}
+.quest-card:hover{transform:translateY(-2px);border-color:var(--border);}
+.quest-card.done{opacity:.5;}
+.q-icon{width:44px;height:44px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;}
+.q-icon.weekly{background:#E8E0FF;}.q-icon.event{background:#B5EAD7;}.q-icon.challenge{background:#FFD6E0;}.q-icon.done-bg{background:#D4F5E9;}
+.q-type{font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;}
+.q-type.weekly{color:#7C5CBF;}.q-type.event{color:#2D9E6B;}.q-type.challenge{color:#D05080;}.q-type.done-c{color:#2D9E6B;}
+.q-title{font-size:.84rem;font-weight:700;color:var(--text);line-height:1.4;}
+.q-reward{font-size:.65rem;color:var(--subtext);margin-top:2px;}
+.q-badge{border-radius:9px;padding:4px 9px;font-size:.65rem;font-weight:800;white-space:nowrap;flex-shrink:0;}
+.q-badge.timer{background:#E8E0FF;color:#7C5CBF;}.q-badge.event-b{background:#B5EAD7;color:#2D9E6B;}.q-badge.done-b{background:#D4F5E9;color:#2D9E6B;}.q-badge.pts{background:var(--yellow);color:#7a5c00;}
 
-    /* ===== BOTTOM NAV ===== */
-    .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--wood2);border-top:3px solid var(--wood3);display:flex;padding:8px 0 16px;z-index:100;box-shadow:0 -4px 16px rgba(100,60,20,.25);}
-    .nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px;cursor:pointer;transition:all .2s;opacity:.5;}
-    .nav-item.active{opacity:1;}
-    .nav-item-icon{font-size:1.3rem;}
-    .nav-item.active .nav-item-icon{transform:scale(1.15);}
-    .nav-item-label{font-size:0.6rem;font-weight:800;color:var(--shelf);}
+/* ===== POINTS ===== */
+.pt-banner{background:var(--yellow);border-radius:16px;padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;gap:10px;box-shadow:0 3px 12px rgba(255,220,100,.3);border:2px solid #FFD966;}
+.reward-list{display:flex;flex-direction:column;gap:9px;margin-bottom:16px;}
+.reward-card{background:white;border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:10px;box-shadow:0 2px 8px rgba(180,150,255,.08);border:2px solid var(--border);}
+.reward-badge{margin-left:auto;background:var(--yellow);border-radius:100px;padding:4px 10px;font-size:.68rem;font-weight:800;color:#7a5c00;}
+.reward-badge.locked{background:#F0E6FF;color:var(--subtext);}
+.pt-row-item{background:white;border-radius:12px;padding:11px 14px;display:flex;justify-content:space-between;align-items:center;border:2px solid var(--border);margin-bottom:7px;}
+.pt-chip{background:var(--yellow);border-radius:100px;padding:3px 9px;font-size:.68rem;font-weight:800;color:#7a5c00;}
 
-    /* ===== MODAL ===== */
-    .modal-overlay{display:none;position:fixed;inset:0;background:rgba(61,44,78,.4);z-index:200;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px);}
-    .modal-overlay.open{display:flex;}
-    .modal{background:white;border-radius:28px 28px 0 0;padding:28px 24px 40px;width:100%;max-width:480px;animation:slideUp .3s cubic-bezier(.34,1.56,.64,1);}
-    @keyframes slideUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
-    .modal-handle{width:40px;height:5px;background:var(--border);border-radius:100px;margin:0 auto 22px;}
-    .modal-title{font-size:1.25rem;font-weight:900;color:var(--text);margin-bottom:6px;}
-    .modal-sub{font-size:0.82rem;color:var(--subtext);margin-bottom:18px;line-height:1.6;}
+/* ===== EVENTS ===== */
+.event-card{background:white;border-radius:16px;padding:14px;margin-bottom:9px;box-shadow:0 2px 8px rgba(180,150,255,.08);border:2px solid var(--border);cursor:pointer;transition:all .2s;}
+.event-card:hover{transform:translateY(-2px);border-color:var(--mint);}
+.event-tag{display:inline-block;border-radius:100px;padding:2px 9px;font-size:.62rem;font-weight:800;margin-bottom:7px;}
+.event-tag.online{background:var(--blue);color:#1a5a9e;}.event-tag.offline{background:var(--peach);color:#9e4a1a;}.event-tag.vol{background:var(--mint);color:#1a7e4e;}
+.event-pts{display:inline-block;background:var(--yellow);border-radius:100px;padding:3px 9px;font-size:.65rem;font-weight:800;color:#7a5c00;margin-top:7px;}
 
-    /* Mentor profile in modal */
-    .mentor-profile-card{
-      background:linear-gradient(135deg,#FFF3E0,#F3EEFF);
-      border-radius:20px;padding:20px;margin-bottom:16px;
-      border:2px solid var(--border);
-      display:flex;flex-direction:column;align-items:center;text-align:center;
-    }
-    .face-large{
-      width:88px;height:88px;border-radius:50%;
-      display:flex;align-items:center;justify-content:center;
-      font-size:3.2rem;border:4px solid white;
-      box-shadow:0 8px 24px rgba(0,0,0,.15);
-      margin-bottom:12px;
-      position:relative;
-    }
-    .face-large::after{
-      content:'';position:absolute;inset:-4px;
-      border-radius:50%;
-      background:linear-gradient(135deg,#C8955A,#A78BFA);
-      z-index:-1;
-    }
-    .mentor-modal-name{font-size:1.1rem;font-weight:900;color:var(--text);margin-bottom:2px;}
-    .mentor-modal-job{font-size:0.78rem;color:var(--subtext);margin-bottom:10px;}
-    .mentor-modal-tags{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;margin-bottom:12px;}
-    .mentor-modal-bio{font-size:0.82rem;color:var(--text);line-height:1.7;background:white;border-radius:12px;padding:10px 14px;border:1px solid var(--border);}
+/* ===== BOTTOM NAV ===== */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--wood2);border-top:3px solid var(--wood3);display:flex;padding:8px 0 16px;z-index:100;box-shadow:0 -4px 16px rgba(100,60,20,.25);}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px;cursor:pointer;transition:all .2s;opacity:.5;}
+.nav-item.active{opacity:1;}
+.nav-item-icon{font-size:1.25rem;}
+.nav-item.active .nav-item-icon{transform:scale(1.15);}
+.nav-item-label{font-size:.58rem;font-weight:800;color:var(--shelf);}
 
-    .val-chip{background:linear-gradient(135deg,#FFE4ED,#EDE9FE);border-radius:14px;padding:12px 16px;text-align:center;margin-bottom:14px;border:2px solid var(--border);}
-    .val-score{font-size:1.1rem;font-weight:900;color:var(--text);}
-    .val-score span{color:#D05080;font-size:1.4rem;}
-    .val-lbl{font-size:0.72rem;color:var(--subtext);margin-top:3px;}
+/* ===== MODALS ===== */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(61,44,78,.4);z-index:200;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px);}
+.modal-overlay.open{display:flex;}
+.modal{background:white;border-radius:28px 28px 0 0;padding:24px 22px 38px;width:100%;max-width:480px;animation:slideUp .3s cubic-bezier(.34,1.56,.64,1);}
+@keyframes slideUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
+.modal-handle{width:40px;height:5px;background:var(--border);border-radius:100px;margin:0 auto 20px;}
+.modal-title{font-size:1.2rem;font-weight:900;color:var(--text);margin-bottom:5px;}
+.modal-sub{font-size:.8rem;color:var(--subtext);margin-bottom:16px;line-height:1.6;}
 
-    .battle-legend{display:flex;justify-content:space-between;font-size:0.65rem;font-weight:700;margin-bottom:6px;}
-    .l-you{color:#FF85A1;} .l-them{color:#6EC6A0;}
-    .battle-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
-    .battle-lbl{font-size:0.72rem;font-weight:700;color:var(--subtext);width:68px;text-align:right;flex-shrink:0;}
-    .bbar{flex:1;height:10px;background:var(--border);border-radius:100px;overflow:hidden;display:flex;}
-    .b-you{height:100%;border-radius:100px;background:linear-gradient(90deg,#FF85A1,#A98BFF);}
-    .b-them{height:100%;border-radius:100px;background:linear-gradient(90deg,#6EC6A0,#5BB8D4);margin-left:auto;}
+/* Mentor profile card in modal */
+.mentor-profile-card{background:linear-gradient(135deg,#FFF3E0,#F3EEFF);border-radius:18px;padding:18px;margin-bottom:14px;border:2px solid var(--border);display:flex;flex-direction:column;align-items:center;text-align:center;}
+.face-large{width:84px;height:84px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:3rem;border:4px solid white;box-shadow:0 8px 24px rgba(0,0,0,.15);margin-bottom:10px;position:relative;}
+.face-large::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:linear-gradient(135deg,#C8955A,#A78BFA);z-index:-1;}
+.mentor-modal-name{font-size:1.05rem;font-weight:900;color:var(--text);margin-bottom:2px;}
+.mentor-modal-bio{font-size:.8rem;color:var(--text);line-height:1.7;background:white;border-radius:10px;padding:9px 12px;border:1px solid var(--border);margin-top:8px;}
+.val-chip{background:linear-gradient(135deg,#FFE4ED,#EDE9FE);border-radius:12px;padding:10px 14px;text-align:center;margin-bottom:12px;border:2px solid var(--border);}
+.battle-row{display:flex;align-items:center;gap:8px;margin-bottom:7px;}
+.battle-lbl{font-size:.68rem;font-weight:700;color:var(--subtext);width:64px;text-align:right;flex-shrink:0;}
+.bbar{flex:1;height:9px;background:var(--border);border-radius:100px;overflow:hidden;display:flex;}
+.b-you{height:100%;border-radius:100px;background:linear-gradient(90deg,#FF85A1,#A98BFF);}
+.b-them{height:100%;border-radius:100px;background:linear-gradient(90deg,#6EC6A0,#5BB8D4);margin-left:auto;}
 
-    .choice-list{display:flex;flex-direction:column;gap:8px;}
-    .choice-btn{background:var(--bg);border:2px solid var(--border);border-radius:14px;padding:12px 16px;color:var(--text);font-size:0.88rem;font-weight:600;text-align:left;cursor:pointer;transition:all .2s;font-family:inherit;}
-    .choice-btn:hover,.choice-btn.selected{background:#F3EEFF;border-color:var(--purple);}
+/* ===== BOOK FLYOUT ANIMATION ===== */
+.book-flyout-overlay{
+  display:none;position:fixed;inset:0;
+  background:rgba(30,15,50,.75);z-index:300;
+  align-items:center;justify-content:center;
+  backdrop-filter:blur(6px);
+}
+.book-flyout-overlay.open{display:flex;}
 
-    /* ===== PARENT ===== */
-    #screen-parent{background:var(--bg);}
-    .parent-hero{background:linear-gradient(135deg,#B5EAD7,#B5D8FF);padding:24px 20px;border-radius:0 0 24px 24px;margin-bottom:20px;}
-    .parent-title{font-size:1.05rem;font-weight:900;color:#1a4a3a;margin-bottom:4px;}
-    .parent-sub{font-size:0.78rem;color:#2a6a5a;}
-    .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;padding:0 20px;}
-    .stat-card{background:white;border-radius:18px;padding:16px;text-align:center;box-shadow:0 3px 10px rgba(180,150,255,.08);border:2px solid var(--border);}
-    .stat-num{font-size:2rem;font-weight:900;background:linear-gradient(135deg,#C8955A,#A78BFA);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-    .stat-lbl{font-size:0.68rem;color:var(--subtext);margin-top:3px;font-weight:700;}
-    .parent-content{padding:0 20px;}
-    .fb-card{background:white;border-radius:16px;padding:14px 16px;margin-bottom:10px;box-shadow:0 3px 10px rgba(180,150,255,.08);border:2px solid var(--border);display:flex;gap:12px;}
-    .fb-dot{width:10px;height:10px;border-radius:50%;background:var(--pink);margin-top:5px;flex-shrink:0;}
-    .fb-text{font-size:0.82rem;color:var(--text);line-height:1.6;}
-    .fb-by{font-size:0.68rem;color:var(--subtext);margin-top:4px;font-weight:700;}
-    .interest-tag{display:inline-flex;align-items:center;gap:4px;background:white;border:2px solid var(--border);border-radius:100px;padding:6px 14px;font-size:0.78rem;font-weight:700;color:var(--text);margin:4px;box-shadow:0 2px 8px rgba(180,150,255,.1);}
-    .back-btn{background:none;border:none;color:var(--shelf);font-size:0.9rem;font-weight:800;cursor:pointer;font-family:inherit;}
+.book-flyout-wrap{
+  position:relative;
+  width:320px;
+  perspective:1200px;
+}
 
-    /* ===== TOAST ===== */
-    .toast{position:fixed;top:80px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#C8955A,#A78BFA);color:white;padding:12px 24px;border-radius:100px;font-size:0.85rem;font-weight:800;z-index:500;opacity:0;transition:opacity .3s;white-space:nowrap;box-shadow:0 6px 20px rgba(200,149,90,.35);pointer-events:none;}
-    .toast.show{opacity:1;}
+/* The flying book effect */
+.flying-book{
+  width:140px;height:200px;
+  border-radius:4px 12px 12px 4px;
+  position:absolute;left:50%;top:50%;
+  transform:translate(-50%,-50%) scale(3) translateY(30px);
+  opacity:0;
+  transition:transform .5s cubic-bezier(.34,1.56,.64,1), opacity .3s;
+  z-index:10;
+  box-shadow:6px 8px 30px rgba(0,0,0,.5);
+}
+.flying-book.fly-in{
+  transform:translate(-50%,-50%) scale(1) translateY(0);
+  opacity:1;
+}
 
-    .pt-row{display:flex;flex-direction:column;gap:8px;}
-    .pt-row-item{background:white;border-radius:14px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;border:2px solid var(--border);}
-    .pt-row-label{font-size:.85rem;font-weight:700;}
-    .pt-chip{background:var(--yellow);border-radius:100px;padding:3px 10px;font-size:.72rem;font-weight:800;color:#7a5c00;}
-  </style>
+/* Book open (two pages) */
+.book-open{
+  width:320px;
+  display:flex;
+  opacity:0;
+  transform:scale(.85);
+  transition:opacity .4s .4s, transform .4s .4s cubic-bezier(.34,1.56,.64,1);
+}
+.book-open.show{opacity:1;transform:scale(1);}
+
+.book-page-left{
+  width:50%;background:linear-gradient(160deg,#FFF8F0,#FFF0E0);
+  border-radius:12px 0 0 12px;
+  padding:16px 12px 16px 16px;
+  box-shadow:-4px 0 20px rgba(0,0,0,.15) inset;
+  position:relative;overflow:hidden;
+  transform-origin:right center;
+  animation:none;
+}
+.book-page-left::before{content:'';position:absolute;right:0;top:0;bottom:0;width:12px;background:linear-gradient(90deg,transparent,rgba(0,0,0,.12));}
+.book-page-right{
+  width:50%;background:linear-gradient(160deg,#F8F0FF,#F0E8FF);
+  border-radius:0 12px 12px 0;
+  padding:16px 16px 16px 12px;
+  box-shadow:4px 0 20px rgba(0,0,0,.1) inset;
+}
+
+.page-label{font-size:.5rem;font-weight:900;letter-spacing:.12em;color:#C8955A;text-transform:uppercase;margin-bottom:8px;}
+.page-face{font-size:3rem;display:block;margin-bottom:6px;}
+.page-name{font-size:.9rem;font-weight:900;color:var(--text);line-height:1.3;margin-bottom:3px;}
+.page-job{font-size:.65rem;color:var(--subtext);margin-bottom:8px;}
+.page-tags{display:flex;flex-wrap:wrap;gap:3px;margin-bottom:8px;}
+.page-tag{background:rgba(200,149,90,.15);border-radius:100px;padding:2px 7px;font-size:.52rem;font-weight:800;color:#8B6340;}
+.page-quote{font-size:.65rem;color:var(--text);line-height:1.6;background:rgba(255,255,255,.6);border-radius:8px;padding:8px;border-left:3px solid #C8955A;font-style:italic;}
+.page-stat{margin-bottom:7px;}
+.page-stat-lbl{font-size:.55rem;font-weight:800;color:var(--subtext);margin-bottom:3px;}
+.page-bar{height:7px;background:rgba(167,139,250,.2);border-radius:100px;overflow:hidden;margin-bottom:2px;}
+.page-bar-fill{height:100%;border-radius:100px;}
+.page-val{font-size:.52rem;color:var(--subtext);text-align:right;}
+.book-cta{
+  position:absolute;bottom:-54px;left:50%;transform:translateX(-50%);
+  white-space:nowrap;
+  background:linear-gradient(135deg,#C8955A,#A78BFA);color:white;
+  border:none;border-radius:100px;padding:13px 28px;
+  font-size:.88rem;font-weight:800;cursor:pointer;font-family:inherit;
+  box-shadow:0 6px 20px rgba(200,149,90,.4);
+  opacity:0;transition:opacity .3s .7s;
+}
+.book-cta.show{opacity:1;}
+.book-close{
+  position:absolute;top:-44px;right:0;
+  background:rgba(255,255,255,.2);border:2px solid rgba(255,255,255,.4);
+  color:white;border-radius:50%;width:36px;height:36px;
+  font-size:1rem;cursor:pointer;font-family:inherit;
+}
+
+/* ===== PARENT ===== */
+#screen-parent{background:var(--bg);}
+.parent-hero{background:linear-gradient(135deg,#B5EAD7,#B5D8FF);padding:22px 18px;border-radius:0 0 22px 22px;margin-bottom:18px;}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:18px;padding:0 16px;}
+.stat-card{background:white;border-radius:16px;padding:14px;text-align:center;box-shadow:0 2px 8px rgba(180,150,255,.08);border:2px solid var(--border);}
+.stat-num{font-size:1.9rem;font-weight:900;background:linear-gradient(135deg,#C8955A,#A78BFA);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.stat-lbl{font-size:.65rem;color:var(--subtext);margin-top:2px;font-weight:700;}
+.fb-card{background:white;border-radius:14px;padding:12px 14px;margin-bottom:9px;box-shadow:0 2px 8px rgba(180,150,255,.08);border:2px solid var(--border);display:flex;gap:10px;}
+.fb-dot{width:9px;height:9px;border-radius:50%;background:var(--pink);margin-top:4px;flex-shrink:0;}
+.interest-tag{display:inline-flex;align-items:center;gap:3px;background:white;border:2px solid var(--border);border-radius:100px;padding:5px 12px;font-size:.75rem;font-weight:700;color:var(--text);margin:3px;box-shadow:0 2px 6px rgba(180,150,255,.1);}
+.back-btn{background:none;border:none;color:var(--shelf);font-size:.88rem;font-weight:800;cursor:pointer;font-family:inherit;}
+
+/* ===== TOAST ===== */
+.toast{position:fixed;top:76px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#C8955A,#A78BFA);color:white;padding:11px 22px;border-radius:100px;font-size:.82rem;font-weight:800;z-index:500;opacity:0;transition:opacity .3s;white-space:nowrap;box-shadow:0 6px 20px rgba(200,149,90,.35);pointer-events:none;}
+.toast.show{opacity:1;}
+</style>
 </head>
 <body>
 
 <!-- ===== ONBOARDING ===== -->
 <div id="screen-onboarding" class="screen active">
   <div class="ob-books" id="ob-books"></div>
-  <div class="ob-content">
-    <div class="mascot">📚</div>
-    <div class="logo">ヨリミチライブラリ</div>
-    <div class="tagline">部活と勉強の往復から<br>ちょっとだけ寄り道しよう 🌸</div>
-    <div class="shock-box">
-      <div style="font-size:.85rem;color:var(--subtext);margin-bottom:10px">あなたが知っている職業の数は？</div>
-      <div class="shock-number" id="counter">0</div>
-      <div class="shock-unit">種類</div>
-      <div class="divider"></div>
-      <div style="font-size:.85rem;color:var(--subtext);margin-bottom:8px">世界には <strong style="color:var(--text)">20,000種類以上</strong> の職業があります</div>
-      <div class="pbar-wrap"><div class="pbar-fill" id="shock-bar" style="width:0%"></div></div>
-      <div style="font-size:.72rem;color:var(--subtext);text-align:right" id="shock-pct">0.00%</div>
-      <div class="shock-text">あなたはまだ世界の<br><span class="shock-hl" id="shock-val">0.00%</span>しか知らない</div>
-    </div>
-    <button class="btn btn-primary" onclick="startApp()">本棚を開く ✨</button>
+  <div class="mascot">📚</div>
+  <div class="logo">ヨリミチライブラリ</div>
+  <div class="tagline">部活と勉強の往復から<br>ちょっとだけ寄り道しよう 🌸</div>
+  <div class="shock-box">
+    <div style="font-size:.82rem;color:var(--subtext);margin-bottom:8px">あなたが知っている職業の数は？</div>
+    <div class="shock-number" id="counter">0</div>
+    <div style="font-size:.78rem;color:var(--subtext);margin-bottom:2px">種類</div>
+    <div class="divider"></div>
+    <div style="font-size:.82rem;color:var(--subtext);margin-bottom:7px">世界には <strong style="color:var(--text)">20,000種類以上</strong> の職業があります</div>
+    <div class="pbar-wrap"><div class="pbar-fill" id="shock-bar" style="width:0%"></div></div>
+    <div style="font-size:.68rem;color:var(--subtext);text-align:right;margin-bottom:8px" id="shock-pct">0.00%</div>
+    <div style="font-size:.88rem;color:var(--text);line-height:1.7">あなたはまだ世界の<br><span class="shock-hl" id="shock-val">0.00%</span>しか知らない</div>
   </div>
+  <button class="btn btn-primary" onclick="startApp()">本棚を開く ✨</button>
 </div>
 
 <!-- ===== MAIN APP ===== -->
@@ -390,48 +333,45 @@
     <div class="nav-logo">📚 ヨリミチライブラリ</div>
     <div style="display:flex;gap:8px;align-items:center">
       <div class="nav-pts">⭐ 320 pt</div>
-      <div onclick="showParent()" style="cursor:pointer;font-size:1.3rem">👨‍👩‍👧</div>
+      <div onclick="showParent()" style="cursor:pointer;font-size:1.25rem">👨‍👩‍👧</div>
     </div>
   </div>
 
   <div class="content">
-
     <!-- World Meter -->
     <div class="library-hero">
       <div class="world-card">
-        <div style="font-size:.75rem;color:rgba(255,255,255,.85);margin-bottom:4px">🌍 あなたの世界の広さ</div>
+        <div style="font-size:.72rem;color:rgba(255,255,255,.85);margin-bottom:3px">🌍 あなたの世界の広さ</div>
         <div class="world-pct">2.4%</div>
-        <div class="world-lbl">登録時 0.06% → 現在 2.4%（40倍に成長！🎉）</div>
+        <div style="font-size:.68rem;color:rgba(255,255,255,.85)">登録時 0.06% → 現在 2.4%（40倍に成長！🎉）</div>
         <div class="world-bar"><div class="world-bar-fill"></div></div>
       </div>
     </div>
 
     <!-- BOOKSHELF -->
     <div class="shelf-section">
-      <div class="shelf-label">📚 あなたの本棚 — 対話するたびに本が増えるよ</div>
+      <div class="shelf-header">📚 あなたの本棚 — 対話するたびに本が増えるよ</div>
 
-      <!-- Row 1: unlocked -->
       <div class="shelf-row">
-        <div class="shelf-board" id="shelf-row1"></div>
-        <div class="shelf-plank"></div>
+        <div class="books-grid" id="shelf-row1"></div>
       </div>
-
-      <!-- Row 2: mix -->
-      <div class="shelf-row" style="margin-top:8px">
-        <div class="shelf-board" id="shelf-row2"></div>
-        <div class="shelf-plank"></div>
+      <div class="shelf-row" style="margin-top:2px">
+        <div class="books-grid" id="shelf-row2"></div>
+      </div>
+      <div class="shelf-row" style="margin-top:2px">
+        <div class="books-grid" id="shelf-row3"></div>
       </div>
     </div>
 
     <!-- Point Banner -->
-    <div style="padding:16px 20px 0">
+    <div style="padding:14px 16px 0">
       <div class="pt-banner">
-        <div style="font-size:2rem;flex-shrink:0">⭐</div>
+        <div style="font-size:1.9rem;flex-shrink:0">⭐</div>
         <div>
-          <div class="pt-title">ポイントを貯めて割引をゲット！</div>
-          <div class="pt-sub">対話・イベント参加・クエストでポイントが貯まる</div>
+          <div style="font-size:.9rem;font-weight:800;color:#5a4000">ポイントを貯めて割引をゲット！</div>
+          <div style="font-size:.7rem;color:#7a5c00;margin-top:1px">対話・イベント参加・クエストで貯まる</div>
         </div>
-        <div class="pt-count">320pt</div>
+        <div style="margin-left:auto;font-size:1.4rem;font-weight:900;color:#5a4000;white-space:nowrap">320pt</div>
       </div>
     </div>
 
@@ -444,30 +384,21 @@
         <button class="switch-btn" onclick="switchTab('points',this)">⭐ 特典</button>
       </div>
 
-      <!-- MENTORS TAB -->
+      <!-- MENTORS -->
       <div class="tab-content active" id="tab-mentors">
         <div class="sec-title">👤 今週マッチングできる先輩</div>
         <div class="mentor-grid" id="mentor-grid"></div>
       </div>
 
-      <!-- QUESTS TAB -->
+      <!-- QUESTS -->
       <div class="tab-content" id="tab-quests">
         <div class="sec-title">📋 クエスト一覧</div>
         <div class="quest-list">
-          <div class="quest-card" onclick="openDailyModal()">
-            <div class="q-icon daily">🌅</div>
-            <div style="flex:1">
-              <div class="q-type daily">Daily · 毎日</div>
-              <div class="q-title">今日の価値観に答えよう</div>
-              <div class="q-reward">⭐ +10pt 獲得</div>
-            </div>
-            <div class="q-badge new">未達成</div>
-          </div>
-          <div class="quest-card" onclick="switchTab('mentors',null);document.querySelectorAll('.switch-btn')[0].classList.add('active');document.querySelectorAll('.switch-btn')[1].classList.remove('active')">
+          <div class="quest-card" onclick="switchTab('mentors',null)">
             <div class="q-icon weekly">🚪</div>
             <div style="flex:1">
               <div class="q-type weekly">Weekly · 毎週</div>
-              <div class="q-title">今週の先輩と対話しよう<br><span style="font-size:.75rem;color:var(--subtext)">ランダムマッチング・60分</span></div>
+              <div class="q-title">今週の先輩と対話しよう<br><span style="font-size:.72rem;color:var(--subtext)">ランダムマッチング・60分</span></div>
               <div class="q-reward">⭐ +100pt 獲得</div>
             </div>
             <div class="q-badge timer">残り2日</div>
@@ -476,7 +407,7 @@
             <div class="q-icon event">🎪</div>
             <div style="flex:1">
               <div class="q-type event">Event · 参加</div>
-              <div class="q-title">社会人トークイベントに参加しよう<br><span style="font-size:.75rem;color:var(--subtext)">6/15 オンライン開催</span></div>
+              <div class="q-title">社会人トークイベントに参加しよう<br><span style="font-size:.72rem;color:var(--subtext)">6/15 オンライン開催</span></div>
               <div class="q-reward">⭐ +50pt 獲得</div>
             </div>
             <div class="q-badge event-b">6/15開催</div>
@@ -502,67 +433,60 @@
         </div>
       </div>
 
-      <!-- EVENTS TAB -->
+      <!-- EVENTS -->
       <div class="tab-content" id="tab-events">
         <div class="sec-title">🎪 イベント・ボランティア</div>
-        <div style="font-size:.78rem;color:var(--subtext);margin-bottom:14px;font-weight:600">参加するとポイントが貯まって対話料金が割引になるよ！</div>
+        <div style="font-size:.75rem;color:var(--subtext);margin-bottom:12px;font-weight:600">参加するとポイントが貯まって対話料金が割引になるよ！</div>
         <div class="event-card" onclick="openEventModal()">
           <span class="event-tag online">🖥 オンライン</span>
-          <div class="event-title">【社会人トークライブ】IT・映像・スポーツ業界のリアル</div>
-          <div class="event-meta">📅 6月15日（土）19:00〜21:00 ／ 参加無料</div>
-          <div class="event-meta" style="margin-top:4px">💬 社会人3名が登壇・質問し放題！</div>
+          <div style="font-size:.9rem;font-weight:800;color:var(--text);margin-bottom:4px">【社会人トークライブ】IT・映像・スポーツ業界のリアル</div>
+          <div style="font-size:.7rem;color:var(--subtext)">📅 6月15日（土）19:00〜21:00 ／ 参加無料</div>
           <span class="event-pts">⭐ 参加で +50pt</span>
         </div>
         <div class="event-card" onclick="openEventModal()">
           <span class="event-tag vol">🌱 ボランティア</span>
-          <div class="event-title">栃木県の農業体験ボランティア</div>
-          <div class="event-meta">📅 6月22日（日）9:00〜16:00 ／ 交通費支給</div>
-          <div class="event-meta" style="margin-top:4px">🌾 農家の方と一緒に収穫体験</div>
+          <div style="font-size:.9rem;font-weight:800;color:var(--text);margin-bottom:4px">栃木県の農業体験ボランティア</div>
+          <div style="font-size:.7rem;color:var(--subtext)">📅 6月22日（日）9:00〜16:00 ／ 交通費支給</div>
           <span class="event-pts">⭐ 参加で +80pt</span>
         </div>
         <div class="event-card" onclick="openEventModal()">
           <span class="event-tag online">🖥 オンライン</span>
-          <div class="event-title">【海外経験者に聞く】世界に出て変わったこと</div>
-          <div class="event-meta">📅 7月5日（土）20:00〜21:30 ／ 参加無料</div>
+          <div style="font-size:.9rem;font-weight:800;color:var(--text);margin-bottom:4px">【海外経験者に聞く】世界に出て変わったこと</div>
+          <div style="font-size:.7rem;color:var(--subtext)">📅 7月5日（土）20:00〜21:30 ／ 参加無料</div>
           <span class="event-pts">⭐ 参加で +50pt</span>
         </div>
         <div class="event-card" onclick="openEventModal()">
           <span class="event-tag offline">📍 現地開催</span>
-          <div class="event-title">都内大学生の「1日密着」体験ツアー</div>
-          <div class="event-meta">📅 7月20日（土）東京・渋谷</div>
+          <div style="font-size:.9rem;font-weight:800;color:var(--text);margin-bottom:4px">都内大学生の「1日密着」体験ツアー</div>
+          <div style="font-size:.7rem;color:var(--subtext)">📅 7月20日（土）東京・渋谷</div>
           <span class="event-pts">⭐ 参加で +120pt</span>
         </div>
       </div>
 
-      <!-- POINTS TAB -->
+      <!-- POINTS -->
       <div class="tab-content" id="tab-points">
-        <div style="background:var(--yellow);border-radius:18px;padding:16px;margin-bottom:18px;border:2px solid #FFD966;text-align:center">
-          <div style="font-size:.8rem;color:#7a5c00;font-weight:700;margin-bottom:4px">現在のポイント</div>
-          <div style="font-size:3rem;font-weight:900;color:#5a4000">320 <span style="font-size:1.2rem">pt</span></div>
-          <div style="font-size:.75rem;color:#7a5c00;margin-top:4px">次の特典まであと <strong>180pt</strong></div>
-          <div style="background:rgba(255,255,255,.5);border-radius:100px;height:8px;margin-top:10px;overflow:hidden">
-            <div style="width:64%;height:100%;background:#FFB700;border-radius:100px"></div>
-          </div>
+        <div style="background:var(--yellow);border-radius:16px;padding:14px;margin-bottom:16px;border:2px solid #FFD966;text-align:center">
+          <div style="font-size:.75rem;color:#7a5c00;font-weight:700;margin-bottom:3px">現在のポイント</div>
+          <div style="font-size:2.8rem;font-weight:900;color:#5a4000">320 <span style="font-size:1.1rem">pt</span></div>
+          <div style="font-size:.72rem;color:#7a5c00;margin-top:3px">次の特典まであと <strong>180pt</strong></div>
+          <div style="background:rgba(255,255,255,.5);border-radius:100px;height:7px;margin-top:8px;overflow:hidden"><div style="width:64%;height:100%;background:#FFB700;border-radius:100px"></div></div>
         </div>
         <div class="sec-title">🎁 交換できる特典</div>
         <div class="reward-list">
-          <div class="reward-card"><div class="reward-icon">💬</div><div style="flex:1"><div class="reward-title">対話1回 500円引き</div><div class="reward-need">必要：500pt</div></div><div class="reward-badge locked">500pt</div></div>
-          <div class="reward-card"><div class="reward-icon">🎟️</div><div style="flex:1"><div class="reward-title">対話1回 無料チケット</div><div class="reward-need">必要：1,000pt</div></div><div class="reward-badge locked">1,000pt</div></div>
-          <div class="reward-card"><div class="reward-icon">📅</div><div style="flex:1"><div class="reward-title">月額 1ヶ月無料</div><div class="reward-need">必要：3,000pt</div></div><div class="reward-badge locked">3,000pt</div></div>
-          <div class="reward-card"><div class="reward-icon">🌟</div><div style="flex:1"><div class="reward-title">プレミアムメンター指名権</div><div class="reward-need">必要：800pt</div></div><div class="reward-badge locked">800pt</div></div>
+          <div class="reward-card"><div style="font-size:1.9rem">💬</div><div style="flex:1"><div style="font-size:.85rem;font-weight:700">対話1回 500円引き</div><div style="font-size:.7rem;color:var(--subtext)">必要：500pt</div></div><div class="reward-badge locked">500pt</div></div>
+          <div class="reward-card"><div style="font-size:1.9rem">🎟️</div><div style="flex:1"><div style="font-size:.85rem;font-weight:700">対話1回 無料チケット</div><div style="font-size:.7rem;color:var(--subtext)">必要：1,000pt</div></div><div class="reward-badge locked">1,000pt</div></div>
+          <div class="reward-card"><div style="font-size:1.9rem">📅</div><div style="flex:1"><div style="font-size:.85rem;font-weight:700">月額 1ヶ月無料</div><div style="font-size:.7rem;color:var(--subtext)">必要：3,000pt</div></div><div class="reward-badge locked">3,000pt</div></div>
+          <div class="reward-card"><div style="font-size:1.9rem">🌟</div><div style="flex:1"><div style="font-size:.85rem;font-weight:700">プレミアムメンター指名権</div><div style="font-size:.7rem;color:var(--subtext)">必要：800pt</div></div><div class="reward-badge locked">800pt</div></div>
         </div>
         <div class="sec-title">📝 ポイントの貯め方</div>
-        <div class="pt-row">
-          <div class="pt-row-item"><span class="pt-row-label">🌅 デイリークエスト達成</span><span class="pt-chip">+10pt</span></div>
-          <div class="pt-row-item"><span class="pt-row-label">🚪 対話（60分）完了</span><span class="pt-chip">+100pt</span></div>
-          <div class="pt-row-item"><span class="pt-row-label">🎪 イベント参加</span><span class="pt-chip">+50〜120pt</span></div>
-          <div class="pt-row-item"><span class="pt-row-label">🌱 ボランティア参加</span><span class="pt-chip">+80pt</span></div>
-          <div class="pt-row-item"><span class="pt-row-label">⚡ チャレンジ達成</span><span class="pt-chip">+150pt</span></div>
-        </div>
+        <div class="pt-row-item"><span style="font-size:.82rem;font-weight:700">🚪 対話（60分）完了</span><span class="pt-chip">+100pt</span></div>
+        <div class="pt-row-item"><span style="font-size:.82rem;font-weight:700">🎪 イベント参加</span><span class="pt-chip">+50〜120pt</span></div>
+        <div class="pt-row-item"><span style="font-size:.82rem;font-weight:700">🌱 ボランティア参加</span><span class="pt-chip">+80pt</span></div>
+        <div class="pt-row-item"><span style="font-size:.82rem;font-weight:700">⚡ チャレンジ達成</span><span class="pt-chip">+150pt</span></div>
       </div>
 
-    </div><!-- /tab-wrap -->
-  </div><!-- /content -->
+    </div>
+  </div>
 
   <div class="bottom-nav">
     <div class="nav-item active" onclick="setNav(this)"><div class="nav-item-icon">🏠</div><div class="nav-item-label">ホーム</div></div>
@@ -581,8 +505,8 @@
   </div>
   <div class="content" style="padding:0 0 40px">
     <div class="parent-hero">
-      <div class="parent-title">👧 とちおとめちゃんの今月の変化</div>
-      <div class="parent-sub">2024年6月 · 3週間目</div>
+      <div style="font-size:1rem;font-weight:900;color:#1a4a3a;margin-bottom:3px">👧 とちおとめちゃんの今月の変化</div>
+      <div style="font-size:.75rem;color:#2a6a5a">2024年6月 · 3週間目</div>
     </div>
     <div class="stat-grid">
       <div class="stat-card"><div class="stat-num">8</div><div class="stat-lbl">対話した先輩の数</div></div>
@@ -590,143 +514,282 @@
       <div class="stat-card"><div class="stat-num">3</div><div class="stat-lbl">参加したイベント数</div></div>
       <div class="stat-card"><div class="stat-num">320</div><div class="stat-lbl">獲得ポイント</div></div>
     </div>
-    <div class="parent-content">
+    <div style="padding:0 16px">
       <div class="sec-title">💌 先輩からのひとこと</div>
-      <div class="fb-card"><div class="fb-dot"></div><div><div class="fb-text">「バスケの話から<strong>スポーツビジネス</strong>に興味が広がっていました。好きなことと仕事を繋げる視点が生まれてきています」</div><div class="fb-by">早稲田大学3年 · 先週の対話より</div></div></div>
-      <div class="fb-card"><div class="fb-dot" style="background:var(--purple)"></div><div><div class="fb-text">「映像制作の話をしたら目が輝いていました。<strong>『こんな仕事があるんだ』</strong>と驚いていて、自分では選ばない分野だったと思います」</div><div class="fb-by">映像クリエイター · 2週間前</div></div></div>
-      <div class="sec-title" style="margin-top:16px">🗺️ 広がった興味マップ</div>
+      <div class="fb-card"><div class="fb-dot"></div><div><div style="font-size:.8rem;line-height:1.6">「バスケの話から<strong>スポーツビジネス</strong>に興味が広がっていました。好きなことと仕事を繋げる視点が生まれてきています」</div><div style="font-size:.65rem;color:var(--subtext);margin-top:3px;font-weight:700">早稲田大学3年 · 先週の対話より</div></div></div>
+      <div class="fb-card"><div class="fb-dot" style="background:var(--purple)"></div><div><div style="font-size:.8rem;line-height:1.6">「映像制作の話をしたら目が輝いていました。<strong>『こんな仕事があるんだ』</strong>と驚いていて、自分では選ばない分野だったと思います」</div><div style="font-size:.65rem;color:var(--subtext);margin-top:3px;font-weight:700">映像クリエイター · 2週間前</div></div></div>
+      <div class="sec-title" style="margin-top:14px">🗺️ 広がった興味マップ</div>
       <div><span class="interest-tag">🏀 スポーツビジネス</span><span class="interest-tag">🎬 映像制作</span><span class="interest-tag">🌱 地方創生</span><span class="interest-tag">📊 マーケティング</span><span class="interest-tag" style="border-style:dashed;color:var(--subtext)">+ もっと広がる予定</span></div>
     </div>
   </div>
 </div>
 
-<!-- ===== MODALS ===== -->
-<!-- Daily -->
-<div class="modal-overlay" id="modal-daily" onclick="closeModal('modal-daily')">
-  <div class="modal" onclick="event.stopPropagation()">
-    <div class="modal-handle"></div>
-    <div class="modal-title">🌅 今日の問い</div>
-    <div class="modal-sub">答えるだけでOK！正解はないよ 🌸　答えると +10pt</div>
-    <div style="font-size:1rem;font-weight:800;color:var(--text);margin-bottom:16px">地元に残る？それとも外に出る？</div>
-    <div class="choice-list" style="margin-bottom:24px">
-      <button class="choice-btn" onclick="completeDaily(this)">🏡 地元に残りたい</button>
-      <button class="choice-btn" onclick="completeDaily(this)">🌆 外に出てみたい</button>
-      <button class="choice-btn" onclick="completeDaily(this)">🤔 まだわからない</button>
-    </div>
-  </div>
-</div>
-
-<!-- Mentor detail -->
-<div class="modal-overlay" id="modal-mentor" onclick="closeModal('modal-mentor')">
-  <div class="modal" onclick="event.stopPropagation()">
-    <div class="modal-handle"></div>
-    <div class="mentor-profile-card" id="mentor-modal-content"></div>
-    <div class="val-chip">
-      <div class="val-score">価値観一致率 <span id="match-pct">18%</span></div>
-      <div class="val-lbl">⚡ 違いが大きいほど視野が広がるよ！</div>
-    </div>
-    <div class="battle-legend"><span class="l-you">● あなた</span><span class="l-them" id="mentor-them-name">● 先輩</span></div>
-    <div class="battle-row"><div class="battle-lbl">安定志向</div><div class="bbar"><div class="b-you" id="bar-stable-you" style="width:70%"></div><div class="b-them" id="bar-stable-them" style="width:15%"></div></div></div>
-    <div class="battle-row"><div class="battle-lbl">地元愛</div><div class="bbar"><div class="b-you" id="bar-local-you" style="width:80%"></div><div class="b-them" id="bar-local-them" style="width:12%"></div></div></div>
-    <div class="battle-row" style="margin-bottom:20px"><div class="battle-lbl">挑戦志向</div><div class="bbar"><div class="b-you" id="bar-challenge-you" style="width:25%"></div><div class="b-them" id="bar-challenge-them" style="width:85%"></div></div></div>
-    <button class="btn btn-primary" onclick="startChat()" style="max-width:100%">話しかけてみる 💬　+100pt</button>
-  </div>
-</div>
-
-<!-- Event -->
+<!-- ===== EVENT MODAL ===== -->
 <div class="modal-overlay" id="modal-event" onclick="closeModal('modal-event')">
   <div class="modal" onclick="event.stopPropagation()">
     <div class="modal-handle"></div>
     <div class="modal-title">🎪 イベントに参加しよう</div>
     <div class="modal-sub">参加するとポイントが貯まって対話料金が割引になるよ！</div>
-    <div style="background:var(--bg);border-radius:16px;padding:16px;margin-bottom:16px;border:2px solid var(--border)">
-      <span class="event-tag online" style="margin-bottom:8px;display:inline-block">🖥 オンライン</span>
-      <div style="font-size:.95rem;font-weight:800;color:var(--text);margin-bottom:6px">【社会人トークライブ】IT・映像・スポーツビジネス業界のリアル</div>
-      <div style="font-size:.78rem;color:var(--subtext)">📅 6月15日（土）19:00〜21:00　💰 参加無料</div>
+    <div style="background:var(--bg);border-radius:14px;padding:14px;margin-bottom:14px;border:2px solid var(--border)">
+      <span class="event-tag online" style="display:inline-block;margin-bottom:6px">🖥 オンライン</span>
+      <div style="font-size:.92rem;font-weight:800;color:var(--text);margin-bottom:5px">【社会人トークライブ】IT・映像・スポーツ業界のリアル</div>
+      <div style="font-size:.75rem;color:var(--subtext)">📅 6月15日（土）19:00〜21:00　💰 参加無料</div>
     </div>
-    <div style="background:var(--yellow);border-radius:14px;padding:12px 16px;text-align:center;margin-bottom:20px;border:2px solid #FFD966">
-      <div style="font-size:.85rem;font-weight:800;color:#5a4000">参加すると ⭐ +50pt ゲット！</div>
-      <div style="font-size:.72rem;color:#7a5c00;margin-top:3px">あと180pt で対話500円引きになるよ</div>
+    <div style="background:var(--yellow);border-radius:12px;padding:11px 14px;text-align:center;margin-bottom:18px;border:2px solid #FFD966">
+      <div style="font-size:.82rem;font-weight:800;color:#5a4000">参加すると ⭐ +50pt ゲット！</div>
     </div>
     <button class="btn btn-primary" onclick="joinEvent()" style="max-width:100%">参加を申し込む 🎪</button>
   </div>
 </div>
 
-<!-- Challenge -->
+<!-- ===== CHALLENGE MODAL ===== -->
 <div class="modal-overlay" id="modal-challenge" onclick="closeModal('modal-challenge')">
   <div class="modal" onclick="event.stopPropagation()">
     <div class="modal-handle"></div>
     <div class="modal-title">⚡ チャレンジクエスト</div>
     <div class="modal-sub">クリアすると大量ポイント＋レアカードが手に入るよ 🃏</div>
-    <div class="quest-list" style="margin-bottom:24px">
+    <div class="quest-list" style="margin-bottom:22px">
       <div class="quest-card" onclick="closeModal('modal-challenge');switchTab('mentors',null)"><div class="q-icon challenge">🔄</div><div style="flex:1"><div class="q-type challenge">Challenge</div><div class="q-title">価値観が真逆の人と話す</div><div class="q-reward">⭐ +150pt ＋ 🃏「挑戦者」カード</div></div></div>
       <div class="quest-card" onclick="closeModal('modal-challenge');switchTab('mentors',null)"><div class="q-icon challenge">🌏</div><div style="flex:1"><div class="q-type challenge">Challenge</div><div class="q-title">海外に出た人と話す</div><div class="q-reward">⭐ +150pt ＋ 🃏「越境者」カード</div></div></div>
       <div class="quest-card" onclick="closeModal('modal-challenge');switchTab('mentors',null)"><div class="q-icon challenge">😱</div><div style="flex:1"><div class="q-type challenge">Challenge</div><div class="q-title">絶対やらないと思ってた仕事の人と話す</div><div class="q-reward">⭐ +200pt ＋ 視野+10%</div></div></div>
     </div>
-    <button class="btn" style="background:#F0E6FF;color:var(--subtext);padding:12px 24px;width:100%;max-width:100%" onclick="closeModal('modal-challenge')">閉じる</button>
+    <button class="btn" style="background:#F0E6FF;color:var(--subtext);padding:11px 22px;width:100%;max-width:100%" onclick="closeModal('modal-challenge')">閉じる</button>
+  </div>
+</div>
+
+<!-- ===== BOOK FLYOUT ===== -->
+<div class="book-flyout-overlay" id="book-flyout" onclick="closeFlyout()">
+  <div class="book-flyout-wrap" onclick="event.stopPropagation()">
+    <button class="book-close" onclick="closeFlyout()">✕</button>
+
+    <!-- Flying book (cover, shows first) -->
+    <div class="flying-book" id="flying-book">
+      <div id="flying-cover" style="width:100%;height:100%;border-radius:4px 12px 12px 4px;padding:14px 12px;display:flex;flex-direction:column;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:0;left:0;width:6px;height:100%;background:rgba(0,0,0,.2)"></div>
+        <div id="fly-num" style="font-size:.55rem;font-weight:900;color:rgba(255,255,255,.7);letter-spacing:.1em;margin-bottom:8px"></div>
+        <div id="fly-emoji" style="font-size:2.8rem;margin-bottom:8px"></div>
+        <div id="fly-title" style="font-size:.75rem;font-weight:900;color:white;text-shadow:0 1px 3px rgba(0,0,0,.4);line-height:1.4;margin-bottom:5px"></div>
+        <div id="fly-sub" style="font-size:.6rem;color:rgba(255,255,255,.85);line-height:1.4"></div>
+        <div id="fly-tag" style="margin-top:auto;background:rgba(255,255,255,.25);border-radius:100px;padding:3px 8px;font-size:.5rem;font-weight:800;color:white;display:inline-block;align-self:flex-start"></div>
+      </div>
+    </div>
+
+    <!-- Opened book (shows after animation) -->
+    <div class="book-open" id="book-open">
+      <!-- Left page: cover info -->
+      <div class="book-page-left" id="book-page-left">
+        <div class="page-label">Vol. <span id="pg-vol"></span></div>
+        <span class="page-face" id="pg-face"></span>
+        <div class="page-name" id="pg-name"></div>
+        <div class="page-job" id="pg-job"></div>
+        <div class="page-tags" id="pg-tags"></div>
+        <div class="page-quote" id="pg-quote"></div>
+      </div>
+      <!-- Right page: stats -->
+      <div class="book-page-right">
+        <div class="page-label">Profile</div>
+        <div class="page-stat">
+          <div class="page-stat-lbl">安定志向</div>
+          <div class="page-bar"><div class="page-bar-fill" id="pg-bar1" style="background:linear-gradient(90deg,#FF85A1,#A98BFF)"></div></div>
+        </div>
+        <div class="page-stat">
+          <div class="page-stat-lbl">挑戦志向</div>
+          <div class="page-bar"><div class="page-bar-fill" id="pg-bar2" style="background:linear-gradient(90deg,#A98BFF,#60A5FA)"></div></div>
+        </div>
+        <div class="page-stat">
+          <div class="page-stat-lbl">地元愛</div>
+          <div class="page-bar"><div class="page-bar-fill" id="pg-bar3" style="background:linear-gradient(90deg,#6EE7B7,#60A5FA)"></div></div>
+        </div>
+        <div style="margin-top:10px;padding:8px;background:rgba(200,149,90,.1);border-radius:8px;border:1px solid rgba(200,149,90,.3)">
+          <div style="font-size:.55rem;font-weight:800;color:#8B6340;margin-bottom:4px">あなたとの価値観の違い</div>
+          <div id="pg-match-txt" style="font-size:.7rem;font-weight:900;color:#C8955A"></div>
+          <div style="font-size:.55rem;color:var(--subtext);margin-top:2px">⚡ 違いが大きいほど視野が広がる！</div>
+        </div>
+        <div style="margin-top:8px;font-size:.58rem;color:var(--subtext);line-height:1.6" id="pg-from"></div>
+      </div>
+    </div>
+
+    <button class="book-cta" id="book-cta" onclick="startChatFromBook()">話しかけてみる 💬 +100pt</button>
+  </div>
+</div>
+
+<!-- MENTOR DETAIL MODAL (from mentor card) -->
+<div class="modal-overlay" id="modal-mentor" onclick="closeModal('modal-mentor')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div class="mentor-profile-card" id="mentor-modal-content"></div>
+    <div class="val-chip">
+      <div style="font-size:1rem;font-weight:900;color:var(--text)">価値観一致率 <span id="match-pct" style="color:#D05080;font-size:1.3rem"></span></div>
+      <div style="font-size:.7rem;color:var(--subtext);margin-top:2px">⚡ 違いが大きいほど視野が広がるよ！</div>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:.62rem;font-weight:700;margin-bottom:5px"><span style="color:#FF85A1">● あなた</span><span style="color:#6EC6A0" id="mentor-them-name">● 先輩</span></div>
+    <div class="battle-row"><div class="battle-lbl">安定志向</div><div class="bbar"><div class="b-you" style="width:70%"></div><div class="b-them" id="bar-stable-them" style="width:15%"></div></div></div>
+    <div class="battle-row"><div class="battle-lbl">地元愛</div><div class="bbar"><div class="b-you" style="width:80%"></div><div class="b-them" id="bar-local-them" style="width:12%"></div></div></div>
+    <div class="battle-row" style="margin-bottom:18px"><div class="battle-lbl">挑戦志向</div><div class="bbar"><div class="b-you" style="width:25%"></div><div class="b-them" id="bar-challenge-them" style="width:85%"></div></div></div>
+    <button class="btn btn-primary" onclick="startChat()" style="max-width:100%">話しかけてみる 💬　+100pt</button>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-// ===== MENTOR DATA =====
-const mentors = [
-  {
-    face:'🧑‍💻', bg:'linear-gradient(135deg,#A78BFA,#60A5FA)',
-    name:'佐藤 颯太（22歳）', job:'ITエンジニア · 東京大学3年',
-    from:'宮城県出身 · 元野球部',
-    tags:['IT','エンジニア','地方出身'],tagCls:['purple','purple','green'],
-    bio:'「やりたいことなんて全然なかった。でもプログラミングを触ったら止まらなくなった」',
-    match:22, stable:[65,8], local:[75,10], challenge:[30,90]
-  },
-  {
-    face:'👩‍🎨', bg:'linear-gradient(135deg,#F9A8D4,#FCD34D)',
-    name:'田中 花（24歳）', job:'映像ディレクター · フリーランス',
-    from:'栃木県出身 · 元バスケ部 🏀',
-    tags:['映像','クリエイター','栃木出身'],tagCls:['pink','pink','green'],
-    bio:'「同じバスケ部出身！地元から出てみたら世界が全然違って見えた」',
-    match:35, stable:[60,20], local:[85,15], challenge:[20,80]
-  },
-  {
-    face:'🧑‍🌾', bg:'linear-gradient(135deg,#6EE7B7,#60A5FA)',
-    name:'鈴木 大地（25歳）', job:'地方創生NPO · 青年海外協力隊経験',
-    from:'北海道出身 · 元サッカー部',
-    tags:['地方創生','海外','ボランティア'],tagCls:['green','purple','green'],
-    bio:'「大学でアフリカに行って、地方の課題が世界と繋がってると知った」',
-    match:12, stable:[30,5], local:[40,20], challenge:[85,95]
-  },
-  {
-    face:'👩‍💼', bg:'linear-gradient(135deg,#FCA5A5,#F9A8D4)',
-    name:'山田 彩（23歳）', job:'スポーツマーケター · 慶應義塾大学院',
-    from:'埼玉県出身 · 元陸上部',
-    tags:['スポーツ','マーケ','ビジネス'],tagCls:['pink','purple','green'],
-    bio:'「スポーツが好きならスポーツビジネスって選択肢、意外と知られてないよ」',
-    match:48, stable:[70,55], local:[50,30], challenge:[50,60]
-  },
+// ===== DATA =====
+const books = [
+  // Row 1 (unlocked - 対話した先輩たちの本)
+  {id:1,emoji:'🧑‍💻',title:'コードで\n世界を変える',sub:'ITエンジニアの\nリアルな日常',tag:'IT・テック',bg:'linear-gradient(160deg,#5B6CF5,#A78BFA)',locked:false,
+   face:'🧑‍💻',name:'佐藤 颯太（22歳）',job:'ITエンジニア · 東京大学3年',from:'📍宮城県出身 · 元野球部',tags:['IT','エンジニア','地方出身'],
+   quote:'「やりたいことなんて全然なかった。プログラミングを触ったら止まらなくなった」',
+   stable:8,challenge:90,local:10,match:22},
+  {id:2,emoji:'🎬',title:'カメラ越しに\n見つけた夢',sub:'映像ディレクターの\n青春物語',tag:'映像・クリエイター',bg:'linear-gradient(160deg,#F97316,#F9A8D4)',locked:false,
+   face:'👩‍🎨',name:'田中 花（24歳）',job:'映像ディレクター · フリーランス',from:'📍栃木県出身 · 元バスケ部 🏀',tags:['映像','クリエイター','栃木出身'],
+   quote:'「同じバスケ部出身！地元から出てみたら世界が全然違って見えた」',
+   stable:20,challenge:80,local:15,match:35},
+  {id:3,emoji:'🌍',title:'アフリカで\n気づいたこと',sub:'地方×海外で\n生きる選択',tag:'地方創生・海外',bg:'linear-gradient(160deg,#10B981,#6EE7B7)',locked:false,
+   face:'🧑‍🌾',name:'鈴木 大地（25歳）',job:'地方創生NPO · 青年海外協力隊',from:'📍北海道出身 · 元サッカー部',tags:['地方創生','海外','NPO'],
+   quote:'「大学でアフリカに行って、地方の課題が世界と繋がってると知った」',
+   stable:5,challenge:95,local:20,match:12},
+  {id:4,emoji:'🏀',title:'スポーツが\n仕事になった',sub:'好きを職業にする\nマーケターの話',tag:'スポーツ・マーケ',bg:'linear-gradient(160deg,#F43F5E,#FBBF24)',locked:false,
+   face:'👩‍💼',name:'山田 彩（23歳）',job:'スポーツマーケター · 慶應義塾大院',from:'📍埼玉県出身 · 元陸上部',tags:['スポーツ','マーケ','ビジネス'],
+   quote:'「スポーツが好きならスポーツビジネスって選択肢、意外と知られてないよ」',
+   stable:55,challenge:60,local:30,match:48},
+  {id:5,emoji:'✈️',title:'留学で\n変わった視点',sub:'海外×教育で\n生きるということ',tag:'留学・教育',bg:'linear-gradient(160deg,#3B82F6,#67E8F9)',locked:false,
+   face:'👩‍🏫',name:'橋本 凛（21歳）',job:'教育系ベンチャー · 早稲田大学3年',from:'📍京都府出身 · 元合唱部',tags:['教育','留学','ベンチャー'],
+   quote:'「英語は手段。大事なのは"何を伝えたいか"だってカナダで気づいた」',
+   stable:40,challenge:75,local:25,match:30},
+
+  // Row 2 (mix unlocked + locked)
+  {id:6,emoji:'🍳',title:'料理人の\n哲学',sub:'食で人を幸せに\nする仕事',tag:'料理・フード',bg:'linear-gradient(160deg,#F59E0B,#FCA5A5)',locked:false,
+   face:'👨‍🍳',name:'松本 健（26歳）',job:'レストランオーナー · 元料理人',from:'📍大阪府出身 · 元野球部',tags:['料理','飲食','経営'],
+   quote:'「食卓に笑顔を届けることが自分の使命だとわかった時、怖いものがなくなった」',
+   stable:60,challenge:65,local:50,match:55},
+  {id:7,emoji:'🎵',title:'音楽で\n食べていく',sub:'プロミュージシャンの\nリアル',tag:'音楽・エンタメ',bg:'linear-gradient(160deg,#8B5CF6,#C4B5FD)',locked:false,
+   face:'🧑‍🎤',name:'伊藤 奏（24歳）',job:'作曲家 · 音楽プロデューサー',from:'📍福岡県出身 · 元吹奏楽部',tags:['音楽','クリエイター','エンタメ'],
+   quote:'「好きなことで食べていくのは甘くない。でもそれでも音楽を選んだ」',
+   stable:25,challenge:85,local:20,match:18},
+  {id:8,emoji:'🔬',title:'研究者という\n生き方',sub:'科学で未来を\n切り拓く',tag:'研究・サイエンス',bg:'linear-gradient(160deg,#06B6D4,#6EE7B7)',locked:true},
+  {id:9,emoji:'🏥',title:'命と向き合う\n日々',sub:'看護師が語る\n本当の仕事',tag:'医療・福祉',bg:'linear-gradient(160deg,#EC4899,#FCA5A5)',locked:true},
+  {id:10,emoji:'📰',title:'真実を\n届ける仕事',sub:'ジャーナリストの\n現場から',tag:'メディア・報道',bg:'linear-gradient(160deg,#374151,#6B7280)',locked:true},
+  {id:11,emoji:'🏗️',title:'街をつくる\n人たち',sub:'建築士が見る\n未来の都市',tag:'建築・デザイン',bg:'linear-gradient(160deg,#92400E,#D97706)',locked:true},
+
+  // Row 3 (all locked)
+  {id:12,emoji:'🌿',title:'農業の\nイノベーション',sub:'スマート農業で\n変わる地方',tag:'農業・食',bg:'linear-gradient(160deg,#15803D,#86EFAC)',locked:true},
+  {id:13,emoji:'⚖️',title:'社会を守る\n仕事',sub:'弁護士という\n選択肢',tag:'法律・社会',bg:'linear-gradient(160deg,#1E3A5F,#3B82F6)',locked:true},
+  {id:14,emoji:'🎮',title:'ゲームで\n世界を変える',sub:'ゲームクリエイターの\nリアル',tag:'ゲーム・エンタメ',bg:'linear-gradient(160deg,#7C3AED,#F472B6)',locked:true},
+  {id:15,emoji:'🚀',title:'宇宙を\n目指す人',sub:'宇宙ビジネスの\n最前線',tag:'宇宙・テクノロジー',bg:'linear-gradient(160deg,#0F172A,#3B82F6)',locked:true},
+  {id:16,emoji:'🎭',title:'表現する\nということ',sub:'俳優・表現者の\n生き方',tag:'舞台・芸術',bg:'linear-gradient(160deg,#BE123C,#F9A8D4)',locked:true},
+  {id:17,emoji:'🌊',title:'海と生きる\n仕事',sub:'漁師・海洋研究者\nの素顔',tag:'海・自然',bg:'linear-gradient(160deg,#0E7490,#67E8F9)',locked:true},
+  {id:18,emoji:'🐾',title:'動物に\n寄り添う',sub:'獣医師が語る\nいのちの話',tag:'動物・獣医',bg:'linear-gradient(160deg,#92400E,#FDE68A)',locked:true},
 ];
 
-const bookData = [
-  // row1: unlocked
-  [{t:'スポーツ\nビジネス',c:'#FF8FAB',h:75},{t:'映像\n制作',c:'#A78BFA',h:85},{t:'IT・\nエンジニア',c:'#60A5FA',h:70},{t:'地方\n創生',c:'#6EE7B7',h:80},{t:'マーケ\nティング',c:'#FCD34D',h:65},{t:'デザイン',c:'#F9A8D4',h:78},],
-  // row2: mix
-  [{t:'海外・旅',c:'#93C5FD',h:72,locked:true},{t:'医療・\n福祉',c:'#FCA5A5',h:68,locked:true},{t:'教育・\n学校',c:'#86EFAC',h:76,locked:true},{t:'料理・\nフード',c:'#FDE68A',h:62,locked:true},{t:'音楽・\n芸術',c:'#C4B5FD',h:80,locked:true},{t:'研究・\n科学',c:'#67E8F9',h:74,locked:true}],
-];
+const rows = [[0,4],[5,10],[11,17]];
 
 function renderShelves(){
-  bookData.forEach((row,ri)=>{
+  rows.forEach(([start,end],ri)=>{
     const el=document.getElementById('shelf-row'+(ri+1));
     el.innerHTML='';
-    row.forEach(b=>{
+    books.slice(start,end+1).forEach(b=>{
       const d=document.createElement('div');
-      d.className='book-spine'+(b.locked?' locked':'');
-      d.style.cssText=`background:${b.c};width:${Math.floor(38+Math.random()*10)}px;height:${b.h}px;`;
-      d.innerHTML=`<span class="book-title">${b.t}</span>${b.locked?'<span class="book-lock">🔒</span>':''}`;
-      if(!b.locked) d.onclick=()=>showToast('📖 '+b.t.replace('\n','')+'の本を開いたよ！');
+      d.className='book-card'+(b.locked?' locked':'');
+      const coverH = 110 + Math.floor(Math.random()*30);
+      d.innerHTML=`
+        <div class="book-cover" style="background:${b.bg};height:${coverH}px;">
+          <div class="book-cover-num">Vol.${String(b.id).padStart(2,'0')}</div>
+          <span class="book-cover-emoji">${b.emoji}</span>
+          <div class="book-cover-title">${b.title.replace('\n','<br>')}</div>
+          <div class="book-cover-sub">${b.sub.replace('\n','<br>')}</div>
+          <span class="book-cover-tag">${b.tag}</span>
+        </div>
+        ${b.locked?`<div class="book-lock-overlay"><div class="book-lock-icon">🔒</div><div class="book-lock-txt">対話して<br>解放！</div></div>`:''}
+      `;
+      if(!b.locked) d.onclick=()=>openBook(b);
       el.appendChild(d);
     });
   });
 }
+
+// ===== BOOK FLYOUT ANIMATION =====
+let currentBook=null;
+function openBook(b){
+  currentBook=b;
+  const overlay=document.getElementById('book-flyout');
+  const flyBook=document.getElementById('flying-book');
+  const bookOpen=document.getElementById('book-open');
+  const cta=document.getElementById('book-cta');
+
+  // Set flying cover appearance
+  flyBook.querySelector('#fly-num').textContent='Vol.'+String(b.id).padStart(2,'0');
+  flyBook.querySelector('#fly-emoji').textContent=b.emoji;
+  flyBook.querySelector('#fly-title').innerHTML=b.title.replace('\n','<br>');
+  flyBook.querySelector('#fly-sub').innerHTML=b.sub.replace('\n','<br>');
+  flyBook.querySelector('#fly-tag').textContent=b.tag;
+  document.getElementById('flying-cover').style.background=b.bg;
+  flyBook.style.background=b.bg;
+
+  // Set open book content
+  document.getElementById('pg-vol').textContent=String(b.id).padStart(2,'0');
+  document.getElementById('pg-face').textContent=b.face||b.emoji;
+  document.getElementById('pg-name').textContent=b.name||'';
+  document.getElementById('pg-job').textContent=b.job||'';
+  document.getElementById('pg-from').textContent=b.from||'';
+  document.getElementById('pg-tags').innerHTML=(b.tags||[]).map(t=>`<span class="page-tag">${t}</span>`).join('');
+  document.getElementById('pg-quote').textContent=b.quote||'';
+  document.getElementById('pg-bar1').style.width=(b.stable||50)+'%';
+  document.getElementById('pg-bar2').style.width=(b.challenge||50)+'%';
+  document.getElementById('pg-bar3').style.width=(b.local||50)+'%';
+  document.getElementById('pg-match-txt').textContent='一致率 '+b.match+'%';
+  document.getElementById('book-page-left').style.background=`linear-gradient(160deg, ${b.bg.split(',')[1]?.trim().replace(')','')||'#FFF8F0'} 0%, #FFF8F0 100%)`;
+
+  // Reset states
+  flyBook.classList.remove('fly-in');
+  bookOpen.classList.remove('show');
+  cta.classList.remove('show');
+
+  overlay.classList.add('open');
+
+  // Step 1: Book flies in
+  requestAnimationFrame(()=>{
+    requestAnimationFrame(()=>{
+      flyBook.classList.add('fly-in');
+    });
+  });
+
+  // Step 2: Book opens (fly book hides, open book appears)
+  setTimeout(()=>{
+    flyBook.style.opacity='0';
+    flyBook.style.transform='translate(-50%,-50%) scale(.7) rotateY(-20deg)';
+    bookOpen.classList.add('show');
+    cta.classList.add('show');
+  },700);
+}
+
+function closeFlyout(){
+  const overlay=document.getElementById('book-flyout');
+  const flyBook=document.getElementById('flying-book');
+  const bookOpen=document.getElementById('book-open');
+  const cta=document.getElementById('book-cta');
+  overlay.classList.remove('open');
+  // Reset for next open
+  setTimeout(()=>{
+    flyBook.style.opacity='';
+    flyBook.style.transform='';
+    flyBook.classList.remove('fly-in');
+    bookOpen.classList.remove('show');
+    cta.classList.remove('show');
+  },300);
+}
+
+function startChatFromBook(){
+  closeFlyout();
+  setTimeout(()=>showToast('💬 マッチング開始！対話完了で +100pt'),300);
+}
+
+// ===== MENTORS =====
+const mentors=[
+  {face:'🧑‍💻',bg:'linear-gradient(135deg,#A78BFA,#60A5FA)',name:'佐藤 颯太（22歳）',job:'ITエンジニア · 東京大学3年',from:'宮城県出身 · 元野球部',tags:['IT','エンジニア','地方出身'],tagCls:['purple','purple','green'],bio:'「やりたいことなんて全然なかった。でもプログラミングを触ったら止まらなくなった」',match:22,stable:[65,8],local:[75,10],challenge:[30,90]},
+  {face:'👩‍🎨',bg:'linear-gradient(135deg,#F9A8D4,#FCD34D)',name:'田中 花（24歳）',job:'映像ディレクター · フリーランス',from:'栃木県出身 · 元バスケ部 🏀',tags:['映像','クリエイター','栃木出身'],tagCls:['pink','pink','green'],bio:'「同じバスケ部出身！地元から出てみたら世界が全然違って見えた」',match:35,stable:[60,20],local:[85,15],challenge:[20,80]},
+  {face:'🧑‍🌾',bg:'linear-gradient(135deg,#6EE7B7,#60A5FA)',name:'鈴木 大地（25歳）',job:'地方創生NPO · 青年海外協力隊',from:'北海道出身 · 元サッカー部',tags:['地方創生','海外','NPO'],tagCls:['green','purple','green'],bio:'「大学でアフリカに行って、地方の課題が世界と繋がってると知った」',match:12,stable:[30,5],local:[40,20],challenge:[85,95]},
+  {face:'👩‍💼',bg:'linear-gradient(135deg,#FCA5A5,#F9A8D4)',name:'山田 彩（23歳）',job:'スポーツマーケター · 慶應義塾大院',from:'埼玉県出身 · 元陸上部',tags:['スポーツ','マーケ','ビジネス'],tagCls:['pink','purple','green'],bio:'「スポーツが好きならスポーツビジネスって選択肢、意外と知られてないよ」',match:48,stable:[70,55],local:[50,30],challenge:[50,60]},
+];
 
 function renderMentors(){
   const grid=document.getElementById('mentor-grid');
@@ -739,16 +802,12 @@ function renderMentors(){
         <div class="face" style="background:${m.bg}">${m.face}</div>
         <div class="face-badge">⭐</div>
       </div>
-      <div class="mentor-info">
+      <div style="flex:1">
         <div class="mentor-name">${m.name}</div>
         <div class="mentor-job">${m.job}</div>
-        <div style="font-size:.7rem;color:var(--subtext);margin-bottom:6px">${m.from}</div>
+        <div style="font-size:.67rem;color:var(--subtext);margin-bottom:5px">${m.from}</div>
         <div class="mentor-tags">${m.tags.map((t,j)=>`<span class="tag ${m.tagCls[j]}">${t}</span>`).join('')}</div>
-        <div class="mentor-match">
-          <span>一致率</span>
-          <div class="match-bar"><div class="match-fill" style="width:${m.match}%"></div></div>
-          <span style="font-weight:800;color:#D05080">${m.match}%</span>
-        </div>
+        <div class="mentor-match"><span>一致率</span><div class="match-bar"><div class="match-fill" style="width:${m.match}%"></div></div><span style="font-weight:800;color:#D05080">${m.match}%</span></div>
       </div>
       <button class="mentor-btn" onclick="event.stopPropagation();openMentor(${i})">話す</button>
     `;
@@ -762,35 +821,30 @@ function openMentor(i){
   document.getElementById('mentor-modal-content').innerHTML=`
     <div class="face-large" style="background:${m.bg}">${m.face}</div>
     <div class="mentor-modal-name">${m.name}</div>
-    <div class="mentor-modal-job">${m.job}</div>
-    <div style="font-size:.72rem;color:var(--subtext);margin-bottom:8px">${m.from}</div>
-    <div class="mentor-modal-tags">${m.tags.map((t,j)=>`<span class="tag ${m.tagCls[j]}">${t}</span>`).join('')}</div>
+    <div style="font-size:.72rem;color:var(--subtext);margin-bottom:3px">${m.job}</div>
+    <div style="font-size:.68rem;color:var(--subtext);margin-bottom:7px">${m.from}</div>
+    <div class="mentor-tags" style="justify-content:center;margin-bottom:8px">${m.tags.map((t,j)=>`<span class="tag ${m.tagCls[j]}">${t}</span>`).join('')}</div>
     <div class="mentor-modal-bio">${m.bio}</div>
   `;
   document.getElementById('match-pct').textContent=m.match+'%';
   document.getElementById('mentor-them-name').textContent='● '+m.name.split('（')[0];
-  document.getElementById('bar-stable-you').style.width='70%';
   document.getElementById('bar-stable-them').style.width=m.stable[1]+'%';
-  document.getElementById('bar-local-you').style.width='80%';
   document.getElementById('bar-local-them').style.width=m.local[1]+'%';
-  document.getElementById('bar-challenge-you').style.width='25%';
   document.getElementById('bar-challenge-them').style.width=m.challenge[1]+'%';
   document.getElementById('modal-mentor').classList.add('open');
 }
 
-// Onboarding bookspines
-const obColors=['#FF8FAB','#A78BFA','#6EE7B7','#FCD34D','#60A5FA','#F9A8D4','#FCA5A5','#86EFAC','#FDE68A'];
-const obTitles=['英語','数学','国語','物理','美術','音楽','体育','歴史','化学'];
+// Onboarding books
+const obColors=['#FF8FAB','#A78BFA','#6EE7B7','#FCD34D','#60A5FA','#F9A8D4','#FCA5A5','#86EFAC','#FDE68A','#93C5FD','#FBBF24','#34D399'];
 const obEl=document.getElementById('ob-books');
 obColors.forEach((c,i)=>{
   const d=document.createElement('div');
   d.className='ob-book';
-  d.style.cssText=`background:${c};height:${50+Math.random()*30}px;`;
-  d.textContent=obTitles[i];
+  d.style.cssText=`background:${c};width:${22+Math.random()*10}px;height:${45+Math.random()*30}px;`;
   obEl.appendChild(d);
 });
 
-// Counter
+// Counter animation
 let count=0;
 const iv=setInterval(()=>{
   count++;
@@ -802,32 +856,24 @@ const iv=setInterval(()=>{
   if(count>=13)clearInterval(iv);
 },80);
 
+// Utils
 function startApp(){
   document.getElementById('screen-onboarding').classList.remove('active');
   document.getElementById('screen-main').classList.add('active');
   renderShelves();
   renderMentors();
 }
-
-function showParent(){
-  document.getElementById('screen-main').classList.remove('active');
-  document.getElementById('screen-parent').classList.add('active');
-}
-function showMain(){
-  document.getElementById('screen-parent').classList.remove('active');
-  document.getElementById('screen-main').classList.add('active');
-}
+function showParent(){document.getElementById('screen-main').classList.remove('active');document.getElementById('screen-parent').classList.add('active');}
+function showMain(){document.getElementById('screen-parent').classList.remove('active');document.getElementById('screen-main').classList.add('active');}
 function setNav(el){document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));el.classList.add('active');}
 function switchTab(name,btn){
   document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
   if(btn){document.querySelectorAll('.switch-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
 }
-function openDailyModal(){document.getElementById('modal-daily').classList.add('open');}
 function openEventModal(){document.getElementById('modal-event').classList.add('open');}
 function openChallengeModal(){document.getElementById('modal-challenge').classList.add('open');}
 function closeModal(id){document.getElementById(id).classList.remove('open');}
-function completeDaily(btn){btn.classList.add('selected');setTimeout(()=>{closeModal('modal-daily');showToast('🎉 +10pt ゲット！');},500);}
 function startChat(){closeModal('modal-mentor');showToast('💬 マッチング開始！対話完了で +100pt');}
 function joinEvent(){closeModal('modal-event');showToast('🎪 参加申し込み完了！ +50pt ゲットできるよ');}
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800);}
