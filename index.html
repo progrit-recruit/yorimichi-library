@@ -1,379 +1,387 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ヨリミチライブラリ</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    :root {
-      --pink:    #FFB7C5;
-      --purple:  #C9B8FF;
-      --yellow:  #FFE999;
-      --mint:    #B5EAD7;
-      --blue:    #B5D8FF;
-      --peach:   #FFDAB9;
-      --text:    #3D2C4E;
-      --subtext: #9D8AAE;
-      --bg:      #FFF8FC;
-      --white:   #FFFFFF;
-      --border:  #F0E6FF;
+    *{margin:0;padding:0;box-sizing:border-box;}
+    :root{
+      --wood1:#C8955A; --wood2:#A0714A; --wood3:#7B5234;
+      --shelf:#E8C99A; --shelf-shadow:#B89070;
+      --book1:#FF8FAB; --book2:#A78BFA; --book3:#6EE7B7;
+      --book4:#FCD34D; --book5:#60A5FA; --book6:#F9A8D4;
+      --book7:#86EFAC; --book8:#FCA5A5; --book9:#C4B5FD;
+      --book10:#6EE7B7; --book11:#FDE68A; --book12:#93C5FD;
+      --pink:#FFB7C5; --purple:#C9B8FF; --yellow:#FFE999;
+      --mint:#B5EAD7; --blue:#B5D8FF; --peach:#FFDAB9;
+      --text:#3D2C4E; --subtext:#9D8AAE;
+      --bg:#FDF6EC; --white:#FFFFFF; --border:#F0E6FF;
+      --wall:#FFF8EE;
     }
+    body{font-family:'Hiragino Kaku Gothic ProN','Meiryo',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
 
-    body {
-      font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-    }
-
-    /* ===== SCREENS ===== */
-    .screen { display: none; min-height: 100vh; flex-direction: column; }
-    .screen.active { display: flex; }
+    .screen{display:none;min-height:100vh;flex-direction:column;}
+    .screen.active{display:flex;}
 
     /* ===== ONBOARDING ===== */
-    #screen-onboarding {
-      background: linear-gradient(160deg, #FFF0F9 0%, #F3EEFF 60%, #EEF6FF 100%);
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 40px 24px;
+    #screen-onboarding{
+      background:linear-gradient(180deg,#FFF3E0 0%,#FDE8C8 100%);
+      align-items:center;justify-content:center;text-align:center;padding:40px 24px;
+      position:relative;overflow:hidden;
     }
-
-    .mascot { font-size: 5rem; margin-bottom: 8px; animation: bounce 2s infinite; }
-    @keyframes bounce {
-      0%,100% { transform: translateY(0); }
-      50%      { transform: translateY(-10px); }
+    #screen-onboarding::before{
+      content:'';position:absolute;bottom:0;left:0;right:0;height:120px;
+      background:var(--wood1);border-radius:0;
     }
-
-    .logo {
-      font-size: 1.9rem; font-weight: 900;
-      background: linear-gradient(135deg, #FF85A1, #A98BFF);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      margin-bottom: 6px;
+    #screen-onboarding::after{
+      content:'';position:absolute;bottom:110px;left:0;right:0;height:12px;
+      background:var(--wood2);
     }
-
-    .tagline { font-size: 0.85rem; color: var(--subtext); margin-bottom: 36px; line-height: 1.7; }
-
-    .shock-box {
-      background: white; border-radius: 28px; padding: 28px 24px;
-      max-width: 360px; margin-bottom: 28px;
-      box-shadow: 0 8px 32px rgba(180,150,255,0.13);
-      border: 2px solid var(--border);
+    .ob-books{
+      position:absolute;bottom:115px;left:0;right:0;
+      display:flex;align-items:flex-end;justify-content:center;gap:4px;padding:0 20px;
+      z-index:1;
     }
-
-    .shock-number {
-      font-size: 4.5rem; font-weight: 900; line-height: 1;
-      background: linear-gradient(135deg, #FF85A1, #A98BFF);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    .ob-book{
+      width:28px;border-radius:3px 3px 0 0;
+      display:flex;align-items:flex-end;justify-content:center;
+      font-size:0.5rem;color:white;font-weight:700;padding-bottom:4px;
+      writing-mode:vertical-rl;text-orientation:mixed;
     }
-
-    .shock-unit { font-size: 1rem; color: var(--subtext); margin-bottom: 12px; }
-
-    .divider { height: 1px; background: var(--border); margin: 14px 0; }
-
-    .pbar-wrap { background: #F0E6FF; border-radius: 100px; height: 10px; margin: 10px 0 5px; overflow: hidden; }
-    .pbar-fill  { height: 100%; border-radius: 100px; background: linear-gradient(90deg,#FF85A1,#A98BFF); transition: width 1s ease; }
-
-    .shock-text { font-size: 0.9rem; color: var(--text); margin-top: 10px; line-height: 1.7; }
-    .shock-hl   { color: #FF6B9D; font-weight: 900; font-size: 1.15rem; }
-
-    .btn {
-      border: none; border-radius: 100px; font-weight: 800; cursor: pointer;
-      transition: transform .2s, box-shadow .2s; font-family: inherit;
+    .ob-content{position:relative;z-index:2;}
+    .mascot{font-size:4rem;margin-bottom:8px;animation:bounce 2s infinite;}
+    @keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+    .logo{
+      font-size:2rem;font-weight:900;
+      background:linear-gradient(135deg,#C8955A,#A78BFA);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+      margin-bottom:6px;
     }
-    .btn-primary {
-      background: linear-gradient(135deg,#FF85A1,#A98BFF); color: white;
-      padding: 16px 40px; font-size: 1rem; width: 100%; max-width: 300px;
-      box-shadow: 0 6px 20px rgba(255,133,161,.35);
+    .tagline{font-size:0.85rem;color:#8B6340;margin-bottom:28px;line-height:1.7;}
+    .shock-box{
+      background:white;border-radius:24px;padding:24px 22px;
+      max-width:340px;margin:0 auto 24px;
+      box-shadow:0 8px 32px rgba(180,120,60,.15);
+      border:2px solid #F0D9B5;
     }
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(255,133,161,.45); }
-    .btn-sub {
-      background: rgba(255,255,255,.7); color: var(--subtext);
-      padding: 12px 24px; font-size: 0.85rem; margin-top: 10px; width: 100%; max-width: 300px;
-      border: 2px solid var(--border);
+    .shock-number{
+      font-size:4.5rem;font-weight:900;line-height:1;
+      background:linear-gradient(135deg,#C8955A,#A78BFA);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
     }
+    .shock-unit{font-size:1rem;color:var(--subtext);margin-bottom:12px;}
+    .divider{height:1px;background:#F0D9B5;margin:14px 0;}
+    .pbar-wrap{background:#F0D9B5;border-radius:100px;height:10px;margin:10px 0 5px;overflow:hidden;}
+    .pbar-fill{height:100%;border-radius:100px;background:linear-gradient(90deg,#C8955A,#A78BFA);transition:width 1s ease;}
+    .shock-text{font-size:0.9rem;color:var(--text);margin-top:10px;line-height:1.7;}
+    .shock-hl{color:#C8955A;font-weight:900;font-size:1.15rem;}
+    .btn{border:none;border-radius:100px;font-weight:800;cursor:pointer;transition:transform .2s,box-shadow .2s;font-family:inherit;}
+    .btn-primary{
+      background:linear-gradient(135deg,#C8955A,#A78BFA);color:white;
+      padding:16px 40px;font-size:1rem;width:100%;max-width:300px;
+      box-shadow:0 6px 20px rgba(200,149,90,.35);
+    }
+    .btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(200,149,90,.45);}
 
     /* ===== NAV ===== */
-    .nav-bar {
-      background: white; padding: 14px 20px;
-      display: flex; align-items: center; justify-content: space-between;
-      border-bottom: 2px solid var(--border); position: sticky; top: 0; z-index: 100;
-      box-shadow: 0 2px 12px rgba(180,150,255,.1);
+    .nav-bar{
+      background:var(--wood2);padding:14px 20px;
+      display:flex;align-items:center;justify-content:space-between;
+      position:sticky;top:0;z-index:100;
+      box-shadow:0 3px 12px rgba(100,60,20,.3);
     }
-    .nav-logo {
-      font-size: 1.05rem; font-weight: 900;
-      background: linear-gradient(135deg,#FF85A1,#A98BFF);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    }
-    .nav-pts {
-      background: var(--yellow); border-radius: 100px;
-      padding: 5px 14px; font-size: 0.78rem; font-weight: 800; color: #7a5c00;
-    }
+    .nav-logo{font-size:1.05rem;font-weight:900;color:var(--shelf);}
+    .nav-pts{background:var(--yellow);border-radius:100px;padding:5px 14px;font-size:0.78rem;font-weight:800;color:#7a5c00;}
 
     /* ===== CONTENT ===== */
-    .content { flex: 1; overflow-y: auto; padding: 20px; padding-bottom: 100px; }
+    .content{flex:1;overflow-y:auto;padding:0 0 100px;}
 
-    /* ===== WORLD METER ===== */
-    .world-card {
-      background: linear-gradient(135deg,#FFB7C5,#C9B8FF);
-      border-radius: 24px; padding: 22px; margin-bottom: 18px;
-      color: var(--text); text-align: center;
-      box-shadow: 0 6px 20px rgba(255,183,197,.35);
+    /* ===== LIBRARY HERO ===== */
+    .library-hero{
+      background:linear-gradient(180deg,#FFF8EE 0%,#FDE8C8 100%);
+      padding:20px 20px 0;
+      position:relative;
     }
-    .world-pct { font-size: 3rem; font-weight: 900; color: white; }
-    .world-lbl { font-size: 0.78rem; color: rgba(255,255,255,.9); margin-top: 4px; }
-    .world-bar { background: rgba(255,255,255,.4); border-radius: 100px; height: 8px; margin-top: 14px; overflow: hidden; }
-    .world-bar-fill { height: 100%; border-radius: 100px; background: white; width: 2.4%; }
+    .world-card{
+      background:linear-gradient(135deg,#C8955A,#A78BFA);
+      border-radius:20px;padding:18px 20px;margin-bottom:20px;color:white;
+      box-shadow:0 6px 20px rgba(200,149,90,.3);
+    }
+    .world-pct{font-size:2.8rem;font-weight:900;color:white;}
+    .world-lbl{font-size:0.75rem;color:rgba(255,255,255,.9);margin-top:2px;}
+    .world-bar{background:rgba(255,255,255,.35);border-radius:100px;height:8px;margin-top:12px;overflow:hidden;}
+    .world-bar-fill{height:100%;border-radius:100px;background:white;width:2.4%;}
 
-    /* ===== POINT BANNER ===== */
-    .pt-banner {
-      background: var(--yellow); border-radius: 18px; padding: 14px 18px;
-      margin-bottom: 16px; display: flex; align-items: center; gap: 12px;
-      box-shadow: 0 3px 12px rgba(255,220,100,.3); border: 2px solid #FFD966;
+    /* ===== BOOKSHELF ===== */
+    .shelf-section{
+      background:var(--wall);
+      padding:0 0 8px;
     }
-    .pt-icon { font-size: 2rem; flex-shrink: 0; }
-    .pt-title { font-size: 0.92rem; font-weight: 800; color: #5a4000; }
-    .pt-sub   { font-size: 0.72rem; color: #7a5c00; margin-top: 2px; }
-    .pt-count { margin-left: auto; font-size: 1.5rem; font-weight: 900; color: #5a4000; white-space: nowrap; }
+    .shelf-label{
+      padding:16px 20px 8px;
+      font-size:0.9rem;font-weight:800;color:var(--wood2);
+      display:flex;align-items:center;gap:6px;
+    }
+    .shelf-row{
+      position:relative;
+      padding:0 12px;
+      margin-bottom:4px;
+    }
+    .shelf-board{
+      display:flex;align-items:flex-end;gap:3px;
+      padding:8px 8px 0;
+      min-height:90px;
+    }
+    .shelf-plank{
+      position:absolute;bottom:0;left:0;right:0;height:14px;
+      background:linear-gradient(180deg,var(--shelf) 0%,var(--shelf-shadow) 100%);
+      border-radius:2px;
+      box-shadow:0 4px 8px rgba(120,80,40,.2);
+    }
+    .shelf-plank::before{
+      content:'';position:absolute;top:0;left:0;right:0;height:2px;
+      background:rgba(255,255,255,.4);border-radius:2px 2px 0 0;
+    }
+    .book-spine{
+      flex-shrink:0;
+      border-radius:3px 3px 0 0;
+      display:flex;align-items:center;justify-content:center;
+      cursor:pointer;
+      transition:transform .2s,box-shadow .2s;
+      position:relative;
+      overflow:hidden;
+    }
+    .book-spine:hover{transform:translateY(-8px);box-shadow:0 8px 16px rgba(0,0,0,.2);}
+    .book-spine.locked{filter:grayscale(.7) opacity(.5);cursor:default;}
+    .book-spine.locked:hover{transform:none;box-shadow:none;}
+    .book-spine::after{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:rgba(0,0,0,.15);border-radius:3px 0 0 3px;}
+    .book-title{
+      writing-mode:vertical-rl;text-orientation:mixed;
+      font-size:0.52rem;font-weight:800;color:white;
+      text-shadow:0 1px 2px rgba(0,0,0,.3);
+      padding:6px 0;
+      letter-spacing:.05em;
+    }
+    .book-lock{font-size:0.7rem;position:absolute;top:4px;right:3px;}
 
     /* ===== TABS ===== */
-    .switch-row {
-      display: flex; gap: 6px; margin-bottom: 18px;
-      background: white; padding: 6px; border-radius: 16px;
-      box-shadow: 0 2px 8px rgba(180,150,255,.1);
+    .tab-wrap{padding:16px 20px 0;}
+    .switch-row{
+      display:flex;gap:6px;margin-bottom:16px;
+      background:white;padding:6px;border-radius:16px;
+      box-shadow:0 2px 8px rgba(180,150,255,.1);
     }
-    .switch-btn {
-      flex: 1; padding: 10px 6px; border-radius: 12px; border: none;
-      background: transparent; color: var(--subtext); font-size: 0.76rem;
-      font-weight: 700; cursor: pointer; transition: all .2s; font-family: inherit;
+    .switch-btn{
+      flex:1;padding:10px 6px;border-radius:12px;border:none;
+      background:transparent;color:var(--subtext);font-size:0.75rem;
+      font-weight:700;cursor:pointer;transition:all .2s;font-family:inherit;
     }
-    .switch-btn.active {
-      background: linear-gradient(135deg,#FFB7C5,#C9B8FF); color: white;
-      box-shadow: 0 3px 10px rgba(255,183,197,.4);
+    .switch-btn.active{
+      background:linear-gradient(135deg,#C8955A,#A78BFA);color:white;
+      box-shadow:0 3px 10px rgba(200,149,90,.3);
     }
+    .tab-content{display:none;}
+    .tab-content.active{display:block;}
+    .sec-title{font-size:0.95rem;font-weight:800;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:6px;}
 
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
-
-    .sec-title {
-      font-size: 0.95rem; font-weight: 800; color: var(--text);
-      margin-bottom: 12px; display: flex; align-items: center; gap: 6px;
+    /* ===== MENTOR CARDS ===== */
+    .mentor-grid{display:flex;flex-direction:column;gap:12px;margin-bottom:20px;}
+    .mentor-card{
+      background:white;border-radius:20px;padding:16px;
+      display:flex;gap:14px;align-items:flex-start;
+      box-shadow:0 4px 14px rgba(180,150,255,.1);
+      border:2px solid var(--border);cursor:pointer;
+      transition:all .2s;
+    }
+    .mentor-card:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(180,150,255,.18);border-color:var(--purple);}
+    .face-wrap{position:relative;flex-shrink:0;}
+    .face{
+      width:64px;height:64px;border-radius:50%;
+      display:flex;align-items:center;justify-content:center;
+      font-size:2.2rem;border:3px solid white;
+      box-shadow:0 4px 12px rgba(0,0,0,.12);
+    }
+    .face-badge{
+      position:absolute;bottom:-2px;right:-2px;
+      width:20px;height:20px;border-radius:50%;
+      background:var(--yellow);border:2px solid white;
+      display:flex;align-items:center;justify-content:center;
+      font-size:0.65rem;
+    }
+    .mentor-info{flex:1;}
+    .mentor-name{font-size:0.95rem;font-weight:800;color:var(--text);margin-bottom:2px;}
+    .mentor-job{font-size:0.75rem;color:var(--subtext);margin-bottom:6px;}
+    .mentor-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px;}
+    .tag{
+      background:var(--border);border-radius:100px;
+      padding:3px 8px;font-size:0.62rem;font-weight:700;color:var(--subtext);
+    }
+    .tag.pink{background:#FFE4ED;color:#D05080;}
+    .tag.purple{background:#EDE9FE;color:#7C5CBF;}
+    .tag.green{background:#D1FAE5;color:#065F46;}
+    .mentor-match{
+      display:flex;align-items:center;gap:6px;
+      font-size:0.72rem;color:var(--subtext);
+    }
+    .match-bar{flex:1;height:6px;background:var(--border);border-radius:100px;overflow:hidden;}
+    .match-fill{height:100%;border-radius:100px;background:linear-gradient(90deg,#FF85A1,#A98BFF);}
+    .mentor-btn{
+      background:linear-gradient(135deg,#C8955A,#A78BFA);color:white;
+      border:none;border-radius:12px;padding:8px 14px;
+      font-size:0.75rem;font-weight:800;cursor:pointer;
+      font-family:inherit;white-space:nowrap;flex-shrink:0;
     }
 
     /* ===== QUEST CARDS ===== */
-    .quest-list { display: flex; flex-direction: column; gap: 10px; }
-
-    .quest-card {
-      background: white; border-radius: 18px; padding: 14px 16px;
-      display: flex; align-items: center; gap: 12px;
-      cursor: pointer; transition: all .2s;
-      box-shadow: 0 3px 10px rgba(180,150,255,.08);
-      border: 2px solid transparent;
+    .quest-list{display:flex;flex-direction:column;gap:10px;}
+    .quest-card{
+      background:white;border-radius:18px;padding:14px 16px;
+      display:flex;align-items:center;gap:12px;cursor:pointer;
+      transition:all .2s;box-shadow:0 3px 10px rgba(180,150,255,.08);
+      border:2px solid transparent;
     }
-    .quest-card:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(180,150,255,.15); border-color: var(--border); }
-    .quest-card.done { opacity: .5; }
+    .quest-card:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(180,150,255,.15);border-color:var(--border);}
+    .quest-card.done{opacity:.5;}
+    .q-icon{width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;}
+    .q-icon.daily{background:#FFF3B0;} .q-icon.weekly{background:#E8E0FF;} .q-icon.event{background:#B5EAD7;} .q-icon.challenge{background:#FFD6E0;} .q-icon.done-bg{background:#D4F5E9;}
+    .q-type{font-size:0.62rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;}
+    .q-type.daily{color:#B8860B;} .q-type.weekly{color:#7C5CBF;} .q-type.event{color:#2D9E6B;} .q-type.challenge{color:#D05080;} .q-type.done-c{color:#2D9E6B;}
+    .q-title{font-size:0.87rem;font-weight:700;color:var(--text);line-height:1.4;}
+    .q-reward{font-size:0.68rem;color:var(--subtext);margin-top:3px;}
+    .q-badge{border-radius:10px;padding:5px 10px;font-size:0.68rem;font-weight:800;white-space:nowrap;flex-shrink:0;}
+    .q-badge.new{background:#FFE4ED;color:#D05080;} .q-badge.timer{background:#E8E0FF;color:#7C5CBF;} .q-badge.event-b{background:#B5EAD7;color:#2D9E6B;} .q-badge.done-b{background:#D4F5E9;color:#2D9E6B;} .q-badge.pts{background:var(--yellow);color:#7a5c00;}
 
-    .q-icon {
-      width: 46px; height: 46px; border-radius: 14px;
-      display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0;
-    }
-    .q-icon.daily     { background: #FFF3B0; }
-    .q-icon.weekly    { background: #E8E0FF; }
-    .q-icon.event     { background: #B5EAD7; }
-    .q-icon.challenge { background: #FFD6E0; }
-    .q-icon.done-bg   { background: #D4F5E9; }
-
-    .q-type { font-size: 0.62rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 2px; }
-    .q-type.daily     { color: #B8860B; }
-    .q-type.weekly    { color: #7C5CBF; }
-    .q-type.event     { color: #2D9E6B; }
-    .q-type.challenge { color: #D05080; }
-    .q-type.done-c    { color: #2D9E6B; }
-
-    .q-title  { font-size: 0.87rem; font-weight: 700; color: var(--text); line-height: 1.4; }
-    .q-reward { font-size: 0.68rem; color: var(--subtext); margin-top: 3px; }
-
-    .q-badge {
-      border-radius: 10px; padding: 5px 10px; font-size: 0.68rem;
-      font-weight: 800; white-space: nowrap; flex-shrink: 0;
-    }
-    .q-badge.new      { background: #FFE4ED; color: #D05080; }
-    .q-badge.timer    { background: #E8E0FF; color: #7C5CBF; }
-    .q-badge.event-b  { background: #B5EAD7; color: #2D9E6B; }
-    .q-badge.done-b   { background: #D4F5E9; color: #2D9E6B; }
-    .q-badge.pts      { background: var(--yellow); color: #7a5c00; }
-
-    /* ===== POINT REWARDS ===== */
-    .reward-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
-
-    .reward-card {
-      background: white; border-radius: 16px; padding: 14px 16px;
-      display: flex; align-items: center; gap: 12px;
-      box-shadow: 0 3px 10px rgba(180,150,255,.08); border: 2px solid var(--border);
-    }
-    .reward-icon { font-size: 2rem; flex-shrink: 0; }
-    .reward-title { font-size: 0.88rem; font-weight: 700; color: var(--text); }
-    .reward-need  { font-size: 0.72rem; color: var(--subtext); margin-top: 2px; }
-    .reward-badge {
-      margin-left: auto; background: var(--yellow); border-radius: 100px;
-      padding: 5px 12px; font-size: 0.72rem; font-weight: 800; color: #7a5c00; white-space: nowrap;
-    }
-    .reward-badge.locked { background: #F0E6FF; color: var(--subtext); }
+    /* ===== POINT ===== */
+    .pt-banner{background:var(--yellow);border-radius:18px;padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;gap:12px;box-shadow:0 3px 12px rgba(255,220,100,.3);border:2px solid #FFD966;}
+    .pt-title{font-size:0.92rem;font-weight:800;color:#5a4000;}
+    .pt-sub{font-size:0.72rem;color:#7a5c00;margin-top:2px;}
+    .pt-count{margin-left:auto;font-size:1.5rem;font-weight:900;color:#5a4000;white-space:nowrap;}
+    .reward-list{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+    .reward-card{background:white;border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:12px;box-shadow:0 3px 10px rgba(180,150,255,.08);border:2px solid var(--border);}
+    .reward-icon{font-size:2rem;flex-shrink:0;}
+    .reward-title{font-size:0.88rem;font-weight:700;color:var(--text);}
+    .reward-need{font-size:0.72rem;color:var(--subtext);margin-top:2px;}
+    .reward-badge{margin-left:auto;background:var(--yellow);border-radius:100px;padding:5px 12px;font-size:0.72rem;font-weight:800;color:#7a5c00;white-space:nowrap;}
+    .reward-badge.locked{background:#F0E6FF;color:var(--subtext);}
 
     /* ===== EVENTS ===== */
-    .event-card {
-      background: white; border-radius: 18px; padding: 16px;
-      margin-bottom: 10px; box-shadow: 0 3px 10px rgba(180,150,255,.08);
-      border: 2px solid var(--border); cursor: pointer; transition: all .2s;
-    }
-    .event-card:hover { transform: translateY(-2px); border-color: var(--mint); }
-    .event-tag {
-      display: inline-block; border-radius: 100px; padding: 3px 10px;
-      font-size: 0.65rem; font-weight: 800; margin-bottom: 8px;
-    }
-    .event-tag.online   { background: var(--blue);   color: #1a5a9e; }
-    .event-tag.offline  { background: var(--peach);  color: #9e4a1a; }
-    .event-tag.vol      { background: var(--mint);   color: #1a7e4e; }
-    .event-title { font-size: 0.92rem; font-weight: 800; color: var(--text); margin-bottom: 4px; }
-    .event-meta  { font-size: 0.72rem; color: var(--subtext); }
-    .event-pts   {
-      display: inline-block; background: var(--yellow);
-      border-radius: 100px; padding: 4px 10px; font-size: 0.68rem;
-      font-weight: 800; color: #7a5c00; margin-top: 8px;
-    }
-
-    /* ===== BOOKSHELF ===== */
-    .bookshelf { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-bottom: 20px; }
-    .book {
-      aspect-ratio: 2/3; border-radius: 14px;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      cursor: pointer; transition: all .2s;
-    }
-    .book.unlocked { background: white; box-shadow: 0 4px 14px rgba(180,150,255,.15); border: 2px solid var(--border); }
-    .book.unlocked:hover { transform: translateY(-4px) scale(1.04); border-color: var(--purple); }
-    .book.locked   { background: #F7F2FF; border: 2px dashed #DDD6FE; }
-    .book-emoji { font-size: 1.5rem; }
-    .book.locked .book-emoji { filter: grayscale(1) opacity(.35); }
-    .book-label { font-size: 0.52rem; color: var(--subtext); margin-top: 4px; text-align: center; padding: 0 3px; font-weight: 700; }
-    .book.locked .book-label { color: #C4B5FD; }
+    .event-card{background:white;border-radius:18px;padding:16px;margin-bottom:10px;box-shadow:0 3px 10px rgba(180,150,255,.08);border:2px solid var(--border);cursor:pointer;transition:all .2s;}
+    .event-card:hover{transform:translateY(-2px);border-color:var(--mint);}
+    .event-tag{display:inline-block;border-radius:100px;padding:3px 10px;font-size:0.65rem;font-weight:800;margin-bottom:8px;}
+    .event-tag.online{background:var(--blue);color:#1a5a9e;} .event-tag.offline{background:var(--peach);color:#9e4a1a;} .event-tag.vol{background:var(--mint);color:#1a7e4e;}
+    .event-title{font-size:0.92rem;font-weight:800;color:var(--text);margin-bottom:4px;}
+    .event-meta{font-size:0.72rem;color:var(--subtext);}
+    .event-pts{display:inline-block;background:var(--yellow);border-radius:100px;padding:4px 10px;font-size:0.68rem;font-weight:800;color:#7a5c00;margin-top:8px;}
 
     /* ===== BOTTOM NAV ===== */
-    .bottom-nav {
-      position: fixed; bottom: 0; left: 0; right: 0;
-      background: white; border-top: 2px solid var(--border);
-      display: flex; padding: 8px 0 16px; z-index: 100;
-      box-shadow: 0 -4px 20px rgba(180,150,255,.1);
-    }
-    .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 8px; cursor: pointer; transition: all .2s; opacity: .4; }
-    .nav-item.active { opacity: 1; }
-    .nav-item-icon { font-size: 1.3rem; }
-    .nav-item.active .nav-item-icon { transform: scale(1.15); }
-    .nav-item-label { font-size: 0.6rem; font-weight: 800; color: #FF85A1; }
+    .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--wood2);border-top:3px solid var(--wood3);display:flex;padding:8px 0 16px;z-index:100;box-shadow:0 -4px 16px rgba(100,60,20,.25);}
+    .nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px;cursor:pointer;transition:all .2s;opacity:.5;}
+    .nav-item.active{opacity:1;}
+    .nav-item-icon{font-size:1.3rem;}
+    .nav-item.active .nav-item-icon{transform:scale(1.15);}
+    .nav-item-label{font-size:0.6rem;font-weight:800;color:var(--shelf);}
 
     /* ===== MODAL ===== */
-    .modal-overlay {
-      display: none; position: fixed; inset: 0;
-      background: rgba(61,44,78,.35); z-index: 200;
-      align-items: flex-end; justify-content: center; backdrop-filter: blur(4px);
-    }
-    .modal-overlay.open { display: flex; }
-    .modal {
-      background: white; border-radius: 28px 28px 0 0;
-      padding: 28px 24px 40px; width: 100%; max-width: 480px;
-      animation: slideUp .3s cubic-bezier(.34,1.56,.64,1);
-    }
-    @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-    .modal-handle { width: 40px; height: 5px; background: var(--border); border-radius: 100px; margin: 0 auto 22px; }
-    .modal-title { font-size: 1.25rem; font-weight: 900; color: var(--text); margin-bottom: 6px; }
-    .modal-sub   { font-size: 0.82rem; color: var(--subtext); margin-bottom: 18px; line-height: 1.6; }
+    .modal-overlay{display:none;position:fixed;inset:0;background:rgba(61,44,78,.4);z-index:200;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px);}
+    .modal-overlay.open{display:flex;}
+    .modal{background:white;border-radius:28px 28px 0 0;padding:28px 24px 40px;width:100%;max-width:480px;animation:slideUp .3s cubic-bezier(.34,1.56,.64,1);}
+    @keyframes slideUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
+    .modal-handle{width:40px;height:5px;background:var(--border);border-radius:100px;margin:0 auto 22px;}
+    .modal-title{font-size:1.25rem;font-weight:900;color:var(--text);margin-bottom:6px;}
+    .modal-sub{font-size:0.82rem;color:var(--subtext);margin-bottom:18px;line-height:1.6;}
 
-    .profile-chip {
-      display: flex; align-items: center; gap: 12px;
-      background: var(--bg); border-radius: 16px; padding: 14px 16px;
-      margin-bottom: 14px; border: 2px solid var(--border);
+    /* Mentor profile in modal */
+    .mentor-profile-card{
+      background:linear-gradient(135deg,#FFF3E0,#F3EEFF);
+      border-radius:20px;padding:20px;margin-bottom:16px;
+      border:2px solid var(--border);
+      display:flex;flex-direction:column;align-items:center;text-align:center;
     }
-    .avatar {
-      width: 46px; height: 46px; border-radius: 50%;
-      background: linear-gradient(135deg,#FF85A1,#A98BFF);
-      display: flex; align-items: center; justify-content: center; font-size: 1.4rem;
+    .face-large{
+      width:88px;height:88px;border-radius:50%;
+      display:flex;align-items:center;justify-content:center;
+      font-size:3.2rem;border:4px solid white;
+      box-shadow:0 8px 24px rgba(0,0,0,.15);
+      margin-bottom:12px;
+      position:relative;
     }
-    .profile-name { font-size: 0.9rem; font-weight: 800; color: var(--text); }
-    .profile-bio  { font-size: 0.72rem; color: var(--subtext); margin-top: 2px; }
-
-    .val-chip {
-      background: linear-gradient(135deg,#FFE4ED,#EDE9FE);
-      border-radius: 14px; padding: 12px 16px; text-align: center;
-      margin-bottom: 16px; border: 2px solid var(--border);
+    .face-large::after{
+      content:'';position:absolute;inset:-4px;
+      border-radius:50%;
+      background:linear-gradient(135deg,#C8955A,#A78BFA);
+      z-index:-1;
     }
-    .val-score { font-size: 1.1rem; font-weight: 900; color: var(--text); }
-    .val-score span { color: #D05080; font-size: 1.4rem; }
-    .val-lbl { font-size: 0.72rem; color: var(--subtext); margin-top: 3px; }
+    .mentor-modal-name{font-size:1.1rem;font-weight:900;color:var(--text);margin-bottom:2px;}
+    .mentor-modal-job{font-size:0.78rem;color:var(--subtext);margin-bottom:10px;}
+    .mentor-modal-tags{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;margin-bottom:12px;}
+    .mentor-modal-bio{font-size:0.82rem;color:var(--text);line-height:1.7;background:white;border-radius:12px;padding:10px 14px;border:1px solid var(--border);}
 
-    .battle-legend { display: flex; justify-content: space-between; font-size: 0.65rem; font-weight: 700; margin-bottom: 6px; }
-    .l-you  { color: #FF85A1; } .l-them { color: #6EC6A0; }
+    .val-chip{background:linear-gradient(135deg,#FFE4ED,#EDE9FE);border-radius:14px;padding:12px 16px;text-align:center;margin-bottom:14px;border:2px solid var(--border);}
+    .val-score{font-size:1.1rem;font-weight:900;color:var(--text);}
+    .val-score span{color:#D05080;font-size:1.4rem;}
+    .val-lbl{font-size:0.72rem;color:var(--subtext);margin-top:3px;}
 
-    .battle-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-    .battle-lbl { font-size: 0.72rem; font-weight: 700; color: var(--subtext); width: 68px; text-align: right; flex-shrink: 0; }
-    .bbar { flex: 1; height: 10px; background: var(--border); border-radius: 100px; overflow: hidden; display: flex; }
-    .b-you  { height: 100%; border-radius: 100px; background: linear-gradient(90deg,#FF85A1,#A98BFF); }
-    .b-them { height: 100%; border-radius: 100px; background: linear-gradient(90deg,#6EC6A0,#5BB8D4); margin-left: auto; }
+    .battle-legend{display:flex;justify-content:space-between;font-size:0.65rem;font-weight:700;margin-bottom:6px;}
+    .l-you{color:#FF85A1;} .l-them{color:#6EC6A0;}
+    .battle-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+    .battle-lbl{font-size:0.72rem;font-weight:700;color:var(--subtext);width:68px;text-align:right;flex-shrink:0;}
+    .bbar{flex:1;height:10px;background:var(--border);border-radius:100px;overflow:hidden;display:flex;}
+    .b-you{height:100%;border-radius:100px;background:linear-gradient(90deg,#FF85A1,#A98BFF);}
+    .b-them{height:100%;border-radius:100px;background:linear-gradient(90deg,#6EC6A0,#5BB8D4);margin-left:auto;}
 
-    .choice-list { display: flex; flex-direction: column; gap: 8px; }
-    .choice-btn {
-      background: var(--bg); border: 2px solid var(--border); border-radius: 14px;
-      padding: 12px 16px; color: var(--text); font-size: 0.88rem; font-weight: 600;
-      text-align: left; cursor: pointer; transition: all .2s; font-family: inherit;
-    }
-    .choice-btn:hover, .choice-btn.selected { background: #F3EEFF; border-color: var(--purple); }
+    .choice-list{display:flex;flex-direction:column;gap:8px;}
+    .choice-btn{background:var(--bg);border:2px solid var(--border);border-radius:14px;padding:12px 16px;color:var(--text);font-size:0.88rem;font-weight:600;text-align:left;cursor:pointer;transition:all .2s;font-family:inherit;}
+    .choice-btn:hover,.choice-btn.selected{background:#F3EEFF;border-color:var(--purple);}
 
     /* ===== PARENT ===== */
-    #screen-parent { background: var(--bg); }
-    .parent-hero { background: linear-gradient(135deg,#B5EAD7,#B5D8FF); padding: 24px 20px; border-radius: 0 0 24px 24px; margin-bottom: 20px; }
-    .parent-title { font-size: 1.05rem; font-weight: 900; color: #1a4a3a; margin-bottom: 4px; }
-    .parent-sub   { font-size: 0.78rem; color: #2a6a5a; }
-
-    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-    .stat-card { background: white; border-radius: 18px; padding: 16px; text-align: center; box-shadow: 0 3px 10px rgba(180,150,255,.08); border: 2px solid var(--border); }
-    .stat-num { font-size: 2rem; font-weight: 900; background: linear-gradient(135deg,#FF85A1,#A98BFF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .stat-lbl { font-size: 0.68rem; color: var(--subtext); margin-top: 3px; font-weight: 700; }
-
-    .fb-card { background: white; border-radius: 16px; padding: 14px 16px; margin-bottom: 10px; box-shadow: 0 3px 10px rgba(180,150,255,.08); border: 2px solid var(--border); display: flex; gap: 12px; }
-    .fb-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--pink); margin-top: 5px; flex-shrink: 0; }
-    .fb-text { font-size: 0.82rem; color: var(--text); line-height: 1.6; }
-    .fb-by   { font-size: 0.68rem; color: var(--subtext); margin-top: 4px; font-weight: 700; }
-
-    .interest-tag { display: inline-flex; align-items: center; gap: 4px; background: white; border: 2px solid var(--border); border-radius: 100px; padding: 6px 14px; font-size: 0.78rem; font-weight: 700; color: var(--text); margin: 4px; box-shadow: 0 2px 8px rgba(180,150,255,.1); }
-
-    .back-btn { background: none; border: none; color: #FF85A1; font-size: 0.9rem; font-weight: 800; cursor: pointer; font-family: inherit; }
+    #screen-parent{background:var(--bg);}
+    .parent-hero{background:linear-gradient(135deg,#B5EAD7,#B5D8FF);padding:24px 20px;border-radius:0 0 24px 24px;margin-bottom:20px;}
+    .parent-title{font-size:1.05rem;font-weight:900;color:#1a4a3a;margin-bottom:4px;}
+    .parent-sub{font-size:0.78rem;color:#2a6a5a;}
+    .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;padding:0 20px;}
+    .stat-card{background:white;border-radius:18px;padding:16px;text-align:center;box-shadow:0 3px 10px rgba(180,150,255,.08);border:2px solid var(--border);}
+    .stat-num{font-size:2rem;font-weight:900;background:linear-gradient(135deg,#C8955A,#A78BFA);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+    .stat-lbl{font-size:0.68rem;color:var(--subtext);margin-top:3px;font-weight:700;}
+    .parent-content{padding:0 20px;}
+    .fb-card{background:white;border-radius:16px;padding:14px 16px;margin-bottom:10px;box-shadow:0 3px 10px rgba(180,150,255,.08);border:2px solid var(--border);display:flex;gap:12px;}
+    .fb-dot{width:10px;height:10px;border-radius:50%;background:var(--pink);margin-top:5px;flex-shrink:0;}
+    .fb-text{font-size:0.82rem;color:var(--text);line-height:1.6;}
+    .fb-by{font-size:0.68rem;color:var(--subtext);margin-top:4px;font-weight:700;}
+    .interest-tag{display:inline-flex;align-items:center;gap:4px;background:white;border:2px solid var(--border);border-radius:100px;padding:6px 14px;font-size:0.78rem;font-weight:700;color:var(--text);margin:4px;box-shadow:0 2px 8px rgba(180,150,255,.1);}
+    .back-btn{background:none;border:none;color:var(--shelf);font-size:0.9rem;font-weight:800;cursor:pointer;font-family:inherit;}
 
     /* ===== TOAST ===== */
-    .toast { position: fixed; top: 80px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg,#FF85A1,#A98BFF); color: white; padding: 12px 24px; border-radius: 100px; font-size: 0.85rem; font-weight: 800; z-index: 500; opacity: 0; transition: opacity .3s; white-space: nowrap; box-shadow: 0 6px 20px rgba(255,133,161,.35); pointer-events: none; }
-    .toast.show { opacity: 1; }
+    .toast{position:fixed;top:80px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#C8955A,#A78BFA);color:white;padding:12px 24px;border-radius:100px;font-size:0.85rem;font-weight:800;z-index:500;opacity:0;transition:opacity .3s;white-space:nowrap;box-shadow:0 6px 20px rgba(200,149,90,.35);pointer-events:none;}
+    .toast.show{opacity:1;}
+
+    .pt-row{display:flex;flex-direction:column;gap:8px;}
+    .pt-row-item{background:white;border-radius:14px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;border:2px solid var(--border);}
+    .pt-row-label{font-size:.85rem;font-weight:700;}
+    .pt-chip{background:var(--yellow);border-radius:100px;padding:3px 10px;font-size:.72rem;font-weight:800;color:#7a5c00;}
   </style>
 </head>
 <body>
 
 <!-- ===== ONBOARDING ===== -->
 <div id="screen-onboarding" class="screen active">
-  <div class="mascot">📚</div>
-  <div class="logo">ヨリミチライブラリ</div>
-  <div class="tagline">部活と勉強の往復から<br>ちょっとだけ寄り道しよう 🌸</div>
-
-  <div class="shock-box">
-    <div style="font-size:.85rem;color:var(--subtext);margin-bottom:10px;">あなたが知っている職業の数は？</div>
-    <div class="shock-number" id="counter">0</div>
-    <div class="shock-unit">種類</div>
-    <div class="divider"></div>
-    <div style="font-size:.85rem;color:var(--subtext);margin-bottom:8px;">世界には <strong style="color:var(--text)">20,000種類以上</strong> の職業があります</div>
-    <div class="pbar-wrap"><div class="pbar-fill" id="shock-bar" style="width:0%"></div></div>
-    <div style="font-size:.72rem;color:var(--subtext);text-align:right" id="shock-pct">0.00%</div>
-    <div class="shock-text">あなたはまだ世界の<br><span class="shock-hl" id="shock-val">0.00%</span>しか知らない</div>
+  <div class="ob-books" id="ob-books"></div>
+  <div class="ob-content">
+    <div class="mascot">📚</div>
+    <div class="logo">ヨリミチライブラリ</div>
+    <div class="tagline">部活と勉強の往復から<br>ちょっとだけ寄り道しよう 🌸</div>
+    <div class="shock-box">
+      <div style="font-size:.85rem;color:var(--subtext);margin-bottom:10px">あなたが知っている職業の数は？</div>
+      <div class="shock-number" id="counter">0</div>
+      <div class="shock-unit">種類</div>
+      <div class="divider"></div>
+      <div style="font-size:.85rem;color:var(--subtext);margin-bottom:8px">世界には <strong style="color:var(--text)">20,000種類以上</strong> の職業があります</div>
+      <div class="pbar-wrap"><div class="pbar-fill" id="shock-bar" style="width:0%"></div></div>
+      <div style="font-size:.72rem;color:var(--subtext);text-align:right" id="shock-pct">0.00%</div>
+      <div class="shock-text">あなたはまだ世界の<br><span class="shock-hl" id="shock-val">0.00%</span>しか知らない</div>
+    </div>
+    <button class="btn btn-primary" onclick="startApp()">本棚を開く ✨</button>
   </div>
-
-  <button class="btn btn-primary" onclick="startApp()">本棚を開く ✨</button>
-  <button class="btn btn-sub" onclick="startApp()">デモを見てみる</button>
 </div>
 
 <!-- ===== MAIN APP ===== -->
@@ -389,231 +397,177 @@
   <div class="content">
 
     <!-- World Meter -->
-    <div class="world-card">
-      <div style="font-size:.75rem;color:rgba(255,255,255,.85);margin-bottom:4px">🌍 あなたの世界の広さ</div>
-      <div class="world-pct">2.4%</div>
-      <div class="world-lbl">登録時 0.06% → 現在 2.4%（40倍に成長！🎉）</div>
-      <div class="world-bar"><div class="world-bar-fill"></div></div>
+    <div class="library-hero">
+      <div class="world-card">
+        <div style="font-size:.75rem;color:rgba(255,255,255,.85);margin-bottom:4px">🌍 あなたの世界の広さ</div>
+        <div class="world-pct">2.4%</div>
+        <div class="world-lbl">登録時 0.06% → 現在 2.4%（40倍に成長！🎉）</div>
+        <div class="world-bar"><div class="world-bar-fill"></div></div>
+      </div>
+    </div>
+
+    <!-- BOOKSHELF -->
+    <div class="shelf-section">
+      <div class="shelf-label">📚 あなたの本棚 — 対話するたびに本が増えるよ</div>
+
+      <!-- Row 1: unlocked -->
+      <div class="shelf-row">
+        <div class="shelf-board" id="shelf-row1"></div>
+        <div class="shelf-plank"></div>
+      </div>
+
+      <!-- Row 2: mix -->
+      <div class="shelf-row" style="margin-top:8px">
+        <div class="shelf-board" id="shelf-row2"></div>
+        <div class="shelf-plank"></div>
+      </div>
     </div>
 
     <!-- Point Banner -->
-    <div class="pt-banner">
-      <div class="pt-icon">⭐</div>
-      <div>
-        <div class="pt-title">ポイントを貯めて割引をゲット！</div>
-        <div class="pt-sub">対話・イベント参加・クエストでポイントが貯まる</div>
+    <div style="padding:16px 20px 0">
+      <div class="pt-banner">
+        <div style="font-size:2rem;flex-shrink:0">⭐</div>
+        <div>
+          <div class="pt-title">ポイントを貯めて割引をゲット！</div>
+          <div class="pt-sub">対話・イベント参加・クエストでポイントが貯まる</div>
+        </div>
+        <div class="pt-count">320pt</div>
       </div>
-      <div class="pt-count">320pt</div>
     </div>
 
     <!-- Tabs -->
-    <div class="switch-row">
-      <button class="switch-btn active" onclick="switchTab('quests',this)">📋 クエスト</button>
-      <button class="switch-btn" onclick="switchTab('events',this)">🎪 イベント</button>
-      <button class="switch-btn" onclick="switchTab('points',this)">⭐ 特典</button>
-      <button class="switch-btn" onclick="switchTab('shelf',this)">📚 本棚</button>
-    </div>
-
-    <!-- QUESTS TAB -->
-    <div class="tab-content active" id="tab-quests">
-      <div class="sec-title">📋 クエスト一覧</div>
-      <div class="quest-list">
-
-        <div class="quest-card" onclick="openDailyModal()">
-          <div class="q-icon daily">🌅</div>
-          <div style="flex:1">
-            <div class="q-type daily">Daily · 毎日</div>
-            <div class="q-title">今日の価値観に答えよう</div>
-            <div class="q-reward">⭐ +10pt 獲得</div>
-          </div>
-          <div class="q-badge new">未達成</div>
-        </div>
-
-        <div class="quest-card" onclick="openWeeklyModal()">
-          <div class="q-icon weekly">🚪</div>
-          <div style="flex:1">
-            <div class="q-type weekly">Weekly · 毎週</div>
-            <div class="q-title">今週の扉を開けよう<br><span style="font-size:.75rem;color:var(--subtext)">ランダムな先輩とマッチング・60分対話</span></div>
-            <div class="q-reward">⭐ +100pt 獲得</div>
-          </div>
-          <div class="q-badge timer">残り2日</div>
-        </div>
-
-        <div class="quest-card" onclick="openEventModal()">
-          <div class="q-icon event">🎪</div>
-          <div style="flex:1">
-            <div class="q-type event">Event · 参加</div>
-            <div class="q-title">社会人トークイベントに参加しよう<br><span style="font-size:.75rem;color:var(--subtext)">6/15 オンライン開催</span></div>
-            <div class="q-reward">⭐ +50pt 獲得</div>
-          </div>
-          <div class="q-badge event-b">6/15開催</div>
-        </div>
-
-        <div class="quest-card" onclick="openEventModal()">
-          <div class="q-icon event">🌱</div>
-          <div style="flex:1">
-            <div class="q-type event">Volunteer · 体験</div>
-            <div class="q-title">地域のボランティアに参加しよう<br><span style="font-size:.75rem;color:var(--subtext)">栃木県内・6/22開催</span></div>
-            <div class="q-reward">⭐ +80pt 獲得</div>
-          </div>
-          <div class="q-badge event-b">6/22開催</div>
-        </div>
-
-        <div class="quest-card" onclick="openChallengeModal()">
-          <div class="q-icon challenge">⚡</div>
-          <div style="flex:1">
-            <div class="q-type challenge">Challenge · 特別</div>
-            <div class="q-title">自分と価値観が真逆の人と話そう</div>
-            <div class="q-reward">⭐ +150pt ＋ レアカード獲得</div>
-          </div>
-          <div class="q-badge pts">挑戦中</div>
-        </div>
-
-        <div class="quest-card done">
-          <div class="q-icon done-bg">✅</div>
-          <div style="flex:1">
-            <div class="q-type done-c">Completed</div>
-            <div class="q-title">先週の扉を開けた</div>
-            <div class="q-reward">🎬 映像制作の世界を解放済み</div>
-          </div>
-          <div class="q-badge done-b">✓ 達成</div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- EVENTS TAB -->
-    <div class="tab-content" id="tab-events">
-      <div class="sec-title">🎪 イベント・ボランティア</div>
-      <div style="font-size:.78rem;color:var(--subtext);margin-bottom:14px;font-weight:600">対話から興味を持ったテーマのイベントに参加しよう！参加するとポイントが貯まります ⭐</div>
-
-      <div class="event-card" onclick="openEventModal()">
-        <span class="event-tag online">🖥 オンライン</span>
-        <div class="event-title">【社会人トークライブ】IT・映像・スポーツビジネス業界のリアル</div>
-        <div class="event-meta">📅 6月15日（土）19:00〜21:00 ／ 参加無料</div>
-        <div class="event-meta" style="margin-top:4px">💬 社会人3名がゲスト登壇。質問し放題！</div>
-        <span class="event-pts">⭐ 参加で +50pt</span>
+    <div class="tab-wrap">
+      <div class="switch-row">
+        <button class="switch-btn active" onclick="switchTab('mentors',this)">👤 先輩</button>
+        <button class="switch-btn" onclick="switchTab('quests',this)">📋 クエスト</button>
+        <button class="switch-btn" onclick="switchTab('events',this)">🎪 イベント</button>
+        <button class="switch-btn" onclick="switchTab('points',this)">⭐ 特典</button>
       </div>
 
-      <div class="event-card" onclick="openEventModal()">
-        <span class="event-tag vol">🌱 ボランティア</span>
-        <div class="event-title">栃木県の農業体験ボランティア</div>
-        <div class="event-meta">📅 6月22日（日）9:00〜16:00 ／ 交通費支給</div>
-        <div class="event-meta" style="margin-top:4px">🌾 農家の方と一緒に収穫体験。地方の仕事を知ろう</div>
-        <span class="event-pts">⭐ 参加で +80pt</span>
+      <!-- MENTORS TAB -->
+      <div class="tab-content active" id="tab-mentors">
+        <div class="sec-title">👤 今週マッチングできる先輩</div>
+        <div class="mentor-grid" id="mentor-grid"></div>
       </div>
 
-      <div class="event-card" onclick="openEventModal()">
-        <span class="event-tag online">🖥 オンライン</span>
-        <div class="event-title">【海外経験者に聞く】世界に出て変わったこと</div>
-        <div class="event-meta">📅 7月5日（土）20:00〜21:30 ／ 参加無料</div>
-        <div class="event-meta" style="margin-top:4px">✈️ 留学・海外就職経験者が登壇</div>
-        <span class="event-pts">⭐ 参加で +50pt</span>
-      </div>
-
-      <div class="event-card" onclick="openEventModal()">
-        <span class="event-tag offline">📍 現地開催</span>
-        <div class="event-title">都内大学生の「1日密着」体験ツアー</div>
-        <div class="event-meta">📅 7月20日（土）10:00〜18:00 ／ 東京・渋谷</div>
-        <div class="event-meta" style="margin-top:4px">🏙 都会の大学生の日常をリアルで体験</div>
-        <span class="event-pts">⭐ 参加で +120pt</span>
-      </div>
-
-    </div>
-
-    <!-- POINTS TAB -->
-    <div class="tab-content" id="tab-points">
-      <div class="sec-title">⭐ ポイント特典</div>
-      <div style="font-size:.78rem;color:var(--subtext);margin-bottom:14px;font-weight:600">貯めたポイントで対話料金を割引！</div>
-
-      <div style="background:var(--yellow);border-radius:18px;padding:16px;margin-bottom:18px;border:2px solid #FFD966;text-align:center">
-        <div style="font-size:.8rem;color:#7a5c00;font-weight:700;margin-bottom:4px">現在のポイント</div>
-        <div style="font-size:3rem;font-weight:900;color:#5a4000">320 <span style="font-size:1.2rem">pt</span></div>
-        <div style="font-size:.75rem;color:#7a5c00;margin-top:4px">次の特典まであと <strong>180pt</strong></div>
-        <div style="background:rgba(255,255,255,.5);border-radius:100px;height:8px;margin-top:10px;overflow:hidden">
-          <div style="width:64%;height:100%;background:#FFB700;border-radius:100px"></div>
+      <!-- QUESTS TAB -->
+      <div class="tab-content" id="tab-quests">
+        <div class="sec-title">📋 クエスト一覧</div>
+        <div class="quest-list">
+          <div class="quest-card" onclick="openDailyModal()">
+            <div class="q-icon daily">🌅</div>
+            <div style="flex:1">
+              <div class="q-type daily">Daily · 毎日</div>
+              <div class="q-title">今日の価値観に答えよう</div>
+              <div class="q-reward">⭐ +10pt 獲得</div>
+            </div>
+            <div class="q-badge new">未達成</div>
+          </div>
+          <div class="quest-card" onclick="switchTab('mentors',null);document.querySelectorAll('.switch-btn')[0].classList.add('active');document.querySelectorAll('.switch-btn')[1].classList.remove('active')">
+            <div class="q-icon weekly">🚪</div>
+            <div style="flex:1">
+              <div class="q-type weekly">Weekly · 毎週</div>
+              <div class="q-title">今週の先輩と対話しよう<br><span style="font-size:.75rem;color:var(--subtext)">ランダムマッチング・60分</span></div>
+              <div class="q-reward">⭐ +100pt 獲得</div>
+            </div>
+            <div class="q-badge timer">残り2日</div>
+          </div>
+          <div class="quest-card" onclick="switchTab('events',null)">
+            <div class="q-icon event">🎪</div>
+            <div style="flex:1">
+              <div class="q-type event">Event · 参加</div>
+              <div class="q-title">社会人トークイベントに参加しよう<br><span style="font-size:.75rem;color:var(--subtext)">6/15 オンライン開催</span></div>
+              <div class="q-reward">⭐ +50pt 獲得</div>
+            </div>
+            <div class="q-badge event-b">6/15開催</div>
+          </div>
+          <div class="quest-card" onclick="openChallengeModal()">
+            <div class="q-icon challenge">⚡</div>
+            <div style="flex:1">
+              <div class="q-type challenge">Challenge · 特別</div>
+              <div class="q-title">自分と価値観が真逆の人と話そう</div>
+              <div class="q-reward">⭐ +150pt ＋ レアカード獲得</div>
+            </div>
+            <div class="q-badge pts">挑戦中</div>
+          </div>
+          <div class="quest-card done">
+            <div class="q-icon done-bg">✅</div>
+            <div style="flex:1">
+              <div class="q-type done-c">Completed</div>
+              <div class="q-title">先週の扉を開けた</div>
+              <div class="q-reward">🎬 映像制作の世界を解放済み</div>
+            </div>
+            <div class="q-badge done-b">✓ 達成</div>
+          </div>
         </div>
       </div>
 
-      <div class="sec-title">🎁 交換できる特典</div>
-      <div class="reward-list">
-
-        <div class="reward-card">
-          <div class="reward-icon">💬</div>
-          <div style="flex:1">
-            <div class="reward-title">対話1回 500円引き</div>
-            <div class="reward-need">必要ポイント：500pt</div>
-          </div>
-          <div class="reward-badge locked">500pt 必要</div>
+      <!-- EVENTS TAB -->
+      <div class="tab-content" id="tab-events">
+        <div class="sec-title">🎪 イベント・ボランティア</div>
+        <div style="font-size:.78rem;color:var(--subtext);margin-bottom:14px;font-weight:600">参加するとポイントが貯まって対話料金が割引になるよ！</div>
+        <div class="event-card" onclick="openEventModal()">
+          <span class="event-tag online">🖥 オンライン</span>
+          <div class="event-title">【社会人トークライブ】IT・映像・スポーツ業界のリアル</div>
+          <div class="event-meta">📅 6月15日（土）19:00〜21:00 ／ 参加無料</div>
+          <div class="event-meta" style="margin-top:4px">💬 社会人3名が登壇・質問し放題！</div>
+          <span class="event-pts">⭐ 参加で +50pt</span>
         </div>
-
-        <div class="reward-card">
-          <div class="reward-icon">🎟️</div>
-          <div style="flex:1">
-            <div class="reward-title">対話1回 無料チケット</div>
-            <div class="reward-need">必要ポイント：1,000pt</div>
-          </div>
-          <div class="reward-badge locked">1,000pt 必要</div>
+        <div class="event-card" onclick="openEventModal()">
+          <span class="event-tag vol">🌱 ボランティア</span>
+          <div class="event-title">栃木県の農業体験ボランティア</div>
+          <div class="event-meta">📅 6月22日（日）9:00〜16:00 ／ 交通費支給</div>
+          <div class="event-meta" style="margin-top:4px">🌾 農家の方と一緒に収穫体験</div>
+          <span class="event-pts">⭐ 参加で +80pt</span>
         </div>
-
-        <div class="reward-card">
-          <div class="reward-icon">📅</div>
-          <div style="flex:1">
-            <div class="reward-title">月額 1ヶ月無料</div>
-            <div class="reward-need">必要ポイント：3,000pt</div>
-          </div>
-          <div class="reward-badge locked">3,000pt 必要</div>
+        <div class="event-card" onclick="openEventModal()">
+          <span class="event-tag online">🖥 オンライン</span>
+          <div class="event-title">【海外経験者に聞く】世界に出て変わったこと</div>
+          <div class="event-meta">📅 7月5日（土）20:00〜21:30 ／ 参加無料</div>
+          <span class="event-pts">⭐ 参加で +50pt</span>
         </div>
-
-        <div class="reward-card">
-          <div class="reward-icon">🌟</div>
-          <div style="flex:1">
-            <div class="reward-title">プレミアムメンター指名権</div>
-            <div class="reward-need">必要ポイント：800pt · 人気の先輩を優先指名できる</div>
-          </div>
-          <div class="reward-badge locked">800pt 必要</div>
-        </div>
-
-      </div>
-
-      <div class="sec-title">📝 ポイントの貯め方</div>
-      <div style="display:flex;flex-direction:column;gap:8px">
-        <div style="background:white;border-radius:14px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;border:2px solid var(--border)">
-          <span style="font-size:.85rem;font-weight:700">🌅 デイリークエスト達成</span>
-          <span style="background:var(--yellow);border-radius:100px;padding:3px 10px;font-size:.72rem;font-weight:800;color:#7a5c00">+10pt</span>
-        </div>
-        <div style="background:white;border-radius:14px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;border:2px solid var(--border)">
-          <span style="font-size:.85rem;font-weight:700">🚪 対話（60分）完了</span>
-          <span style="background:var(--yellow);border-radius:100px;padding:3px 10px;font-size:.72rem;font-weight:800;color:#7a5c00">+100pt</span>
-        </div>
-        <div style="background:white;border-radius:14px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;border:2px solid var(--border)">
-          <span style="font-size:.85rem;font-weight:700">🎪 イベント参加</span>
-          <span style="background:var(--yellow);border-radius:100px;padding:3px 10px;font-size:.72rem;font-weight:800;color:#7a5c00">+50〜120pt</span>
-        </div>
-        <div style="background:white;border-radius:14px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;border:2px solid var(--border)">
-          <span style="font-size:.85rem;font-weight:700">🌱 ボランティア参加</span>
-          <span style="background:var(--yellow);border-radius:100px;padding:3px 10px;font-size:.72rem;font-weight:800;color:#7a5c00">+80pt</span>
-        </div>
-        <div style="background:white;border-radius:14px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;border:2px solid var(--border)">
-          <span style="font-size:.85rem;font-weight:700">⚡ チャレンジクエスト達成</span>
-          <span style="background:var(--yellow);border-radius:100px;padding:3px 10px;font-size:.72rem;font-weight:800;color:#7a5c00">+150pt</span>
+        <div class="event-card" onclick="openEventModal()">
+          <span class="event-tag offline">📍 現地開催</span>
+          <div class="event-title">都内大学生の「1日密着」体験ツアー</div>
+          <div class="event-meta">📅 7月20日（土）東京・渋谷</div>
+          <span class="event-pts">⭐ 参加で +120pt</span>
         </div>
       </div>
-    </div>
 
-    <!-- SHELF TAB -->
-    <div class="tab-content" id="tab-shelf">
-      <div class="sec-title">📚 あなたの本棚</div>
-      <div style="font-size:.78rem;color:var(--subtext);margin-bottom:14px;font-weight:600">対話するたびに新しい本が増えていくよ 🌸</div>
-      <div class="bookshelf" id="bookshelf"></div>
-    </div>
+      <!-- POINTS TAB -->
+      <div class="tab-content" id="tab-points">
+        <div style="background:var(--yellow);border-radius:18px;padding:16px;margin-bottom:18px;border:2px solid #FFD966;text-align:center">
+          <div style="font-size:.8rem;color:#7a5c00;font-weight:700;margin-bottom:4px">現在のポイント</div>
+          <div style="font-size:3rem;font-weight:900;color:#5a4000">320 <span style="font-size:1.2rem">pt</span></div>
+          <div style="font-size:.75rem;color:#7a5c00;margin-top:4px">次の特典まであと <strong>180pt</strong></div>
+          <div style="background:rgba(255,255,255,.5);border-radius:100px;height:8px;margin-top:10px;overflow:hidden">
+            <div style="width:64%;height:100%;background:#FFB700;border-radius:100px"></div>
+          </div>
+        </div>
+        <div class="sec-title">🎁 交換できる特典</div>
+        <div class="reward-list">
+          <div class="reward-card"><div class="reward-icon">💬</div><div style="flex:1"><div class="reward-title">対話1回 500円引き</div><div class="reward-need">必要：500pt</div></div><div class="reward-badge locked">500pt</div></div>
+          <div class="reward-card"><div class="reward-icon">🎟️</div><div style="flex:1"><div class="reward-title">対話1回 無料チケット</div><div class="reward-need">必要：1,000pt</div></div><div class="reward-badge locked">1,000pt</div></div>
+          <div class="reward-card"><div class="reward-icon">📅</div><div style="flex:1"><div class="reward-title">月額 1ヶ月無料</div><div class="reward-need">必要：3,000pt</div></div><div class="reward-badge locked">3,000pt</div></div>
+          <div class="reward-card"><div class="reward-icon">🌟</div><div style="flex:1"><div class="reward-title">プレミアムメンター指名権</div><div class="reward-need">必要：800pt</div></div><div class="reward-badge locked">800pt</div></div>
+        </div>
+        <div class="sec-title">📝 ポイントの貯め方</div>
+        <div class="pt-row">
+          <div class="pt-row-item"><span class="pt-row-label">🌅 デイリークエスト達成</span><span class="pt-chip">+10pt</span></div>
+          <div class="pt-row-item"><span class="pt-row-label">🚪 対話（60分）完了</span><span class="pt-chip">+100pt</span></div>
+          <div class="pt-row-item"><span class="pt-row-label">🎪 イベント参加</span><span class="pt-chip">+50〜120pt</span></div>
+          <div class="pt-row-item"><span class="pt-row-label">🌱 ボランティア参加</span><span class="pt-chip">+80pt</span></div>
+          <div class="pt-row-item"><span class="pt-row-label">⚡ チャレンジ達成</span><span class="pt-chip">+150pt</span></div>
+        </div>
+      </div>
 
-  </div>
+    </div><!-- /tab-wrap -->
+  </div><!-- /content -->
 
   <div class="bottom-nav">
     <div class="nav-item active" onclick="setNav(this)"><div class="nav-item-icon">🏠</div><div class="nav-item-label">ホーム</div></div>
+    <div class="nav-item" onclick="setNav(this);switchTab('mentors',null)"><div class="nav-item-icon">👤</div><div class="nav-item-label">先輩</div></div>
     <div class="nav-item" onclick="setNav(this);switchTab('events',null)"><div class="nav-item-icon">🎪</div><div class="nav-item-label">イベント</div></div>
-    <div class="nav-item" onclick="setNav(this);switchTab('points',null)"><div class="nav-item-icon">⭐</div><div class="nav-item-label">特典</div></div>
     <div class="nav-item" onclick="setNav(this);showParent()"><div class="nav-item-icon">👨‍👩‍👧</div><div class="nav-item-label">親へ</div></div>
   </div>
 </div>
@@ -625,55 +579,34 @@
     <div class="nav-logo">保護者ダッシュボード</div>
     <div style="width:40px"></div>
   </div>
-  <div class="content">
+  <div class="content" style="padding:0 0 40px">
     <div class="parent-hero">
       <div class="parent-title">👧 とちおとめちゃんの今月の変化</div>
       <div class="parent-sub">2024年6月 · 3週間目</div>
     </div>
-
     <div class="stat-grid">
       <div class="stat-card"><div class="stat-num">8</div><div class="stat-lbl">対話した先輩の数</div></div>
-      <div class="stat-card"><div class="stat-num">2.4%</div><div class="stat-lbl">世界の広さ（登録時0.06%）</div></div>
+      <div class="stat-card"><div class="stat-num">2.4%</div><div class="stat-lbl">世界の広さ</div></div>
       <div class="stat-card"><div class="stat-num">3</div><div class="stat-lbl">参加したイベント数</div></div>
       <div class="stat-card"><div class="stat-num">320</div><div class="stat-lbl">獲得ポイント</div></div>
     </div>
-
-    <div class="sec-title">💌 先輩からのひとこと</div>
-
-    <div class="fb-card">
-      <div class="fb-dot"></div>
-      <div>
-        <div class="fb-text">「バスケの話から<strong>スポーツビジネス</strong>に興味が広がっていました。好きなことと仕事を繋げる視点が生まれてきています」</div>
-        <div class="fb-by">早稲田大学3年 · 先週の対話より</div>
-      </div>
-    </div>
-    <div class="fb-card">
-      <div class="fb-dot" style="background:var(--purple)"></div>
-      <div>
-        <div class="fb-text">「映像制作の話をしたら目が輝いていました。<strong>『こんな仕事があるんだ』</strong>と驚いていて、自分では選ばない分野だったと思います」</div>
-        <div class="fb-by">映像クリエイター · 2週間前の対話より</div>
-      </div>
-    </div>
-
-    <div class="sec-title" style="margin-top:8px">🗺️ 広がった興味マップ</div>
-    <div style="margin-bottom:24px">
-      <span class="interest-tag">🏀 スポーツビジネス</span>
-      <span class="interest-tag">🎬 映像制作</span>
-      <span class="interest-tag">🌱 地方創生</span>
-      <span class="interest-tag">📊 マーケティング</span>
-      <span class="interest-tag" style="border-style:dashed;color:var(--subtext)">+ もっと広がる予定</span>
+    <div class="parent-content">
+      <div class="sec-title">💌 先輩からのひとこと</div>
+      <div class="fb-card"><div class="fb-dot"></div><div><div class="fb-text">「バスケの話から<strong>スポーツビジネス</strong>に興味が広がっていました。好きなことと仕事を繋げる視点が生まれてきています」</div><div class="fb-by">早稲田大学3年 · 先週の対話より</div></div></div>
+      <div class="fb-card"><div class="fb-dot" style="background:var(--purple)"></div><div><div class="fb-text">「映像制作の話をしたら目が輝いていました。<strong>『こんな仕事があるんだ』</strong>と驚いていて、自分では選ばない分野だったと思います」</div><div class="fb-by">映像クリエイター · 2週間前</div></div></div>
+      <div class="sec-title" style="margin-top:16px">🗺️ 広がった興味マップ</div>
+      <div><span class="interest-tag">🏀 スポーツビジネス</span><span class="interest-tag">🎬 映像制作</span><span class="interest-tag">🌱 地方創生</span><span class="interest-tag">📊 マーケティング</span><span class="interest-tag" style="border-style:dashed;color:var(--subtext)">+ もっと広がる予定</span></div>
     </div>
   </div>
 </div>
 
 <!-- ===== MODALS ===== -->
-
 <!-- Daily -->
 <div class="modal-overlay" id="modal-daily" onclick="closeModal('modal-daily')">
   <div class="modal" onclick="event.stopPropagation()">
     <div class="modal-handle"></div>
     <div class="modal-title">🌅 今日の問い</div>
-    <div class="modal-sub">答えるだけでOK！正解はないよ 🌸　答えると +10pt ゲット</div>
+    <div class="modal-sub">答えるだけでOK！正解はないよ 🌸　答えると +10pt</div>
     <div style="font-size:1rem;font-weight:800;color:var(--text);margin-bottom:16px">地元に残る？それとも外に出る？</div>
     <div class="choice-list" style="margin-bottom:24px">
       <button class="choice-btn" onclick="completeDaily(this)">🏡 地元に残りたい</button>
@@ -683,28 +616,20 @@
   </div>
 </div>
 
-<!-- Weekly -->
-<div class="modal-overlay" id="modal-weekly" onclick="closeModal('modal-weekly')">
+<!-- Mentor detail -->
+<div class="modal-overlay" id="modal-mentor" onclick="closeModal('modal-mentor')">
   <div class="modal" onclick="event.stopPropagation()">
     <div class="modal-handle"></div>
-    <div class="modal-title">🚪 今週の扉が開いた！</div>
-    <div class="modal-sub">あなたが選んでいない分野の先輩とランダムマッチング ✨　対話完了で +100pt</div>
-    <div class="profile-chip">
-      <div class="avatar">🎬</div>
-      <div>
-        <div class="profile-name">田中 海斗さん（23歳）</div>
-        <div class="profile-bio">映像ディレクター · 宮城県出身 · 元サッカー部</div>
-      </div>
-    </div>
+    <div class="mentor-profile-card" id="mentor-modal-content"></div>
     <div class="val-chip">
-      <div class="val-score">価値観一致率 <span>18%</span></div>
+      <div class="val-score">価値観一致率 <span id="match-pct">18%</span></div>
       <div class="val-lbl">⚡ 違いが大きいほど視野が広がるよ！</div>
     </div>
-    <div class="battle-legend"><span class="l-you">● あなた</span><span class="l-them">● 田中さん</span></div>
-    <div class="battle-row"><div class="battle-lbl">安定志向</div><div class="bbar"><div class="b-you" style="width:70%"></div><div class="b-them" style="width:15%"></div></div></div>
-    <div class="battle-row"><div class="battle-lbl">地元愛</div><div class="bbar"><div class="b-you" style="width:80%"></div><div class="b-them" style="width:12%"></div></div></div>
-    <div class="battle-row" style="margin-bottom:20px"><div class="battle-lbl">挑戦志向</div><div class="bbar"><div class="b-you" style="width:25%"></div><div class="b-them" style="width:85%"></div></div></div>
-    <button class="btn btn-primary" onclick="startChat()" style="max-width:100%">話しかけてみる 💬</button>
+    <div class="battle-legend"><span class="l-you">● あなた</span><span class="l-them" id="mentor-them-name">● 先輩</span></div>
+    <div class="battle-row"><div class="battle-lbl">安定志向</div><div class="bbar"><div class="b-you" id="bar-stable-you" style="width:70%"></div><div class="b-them" id="bar-stable-them" style="width:15%"></div></div></div>
+    <div class="battle-row"><div class="battle-lbl">地元愛</div><div class="bbar"><div class="b-you" id="bar-local-you" style="width:80%"></div><div class="b-them" id="bar-local-them" style="width:12%"></div></div></div>
+    <div class="battle-row" style="margin-bottom:20px"><div class="battle-lbl">挑戦志向</div><div class="bbar"><div class="b-you" id="bar-challenge-you" style="width:25%"></div><div class="b-them" id="bar-challenge-them" style="width:85%"></div></div></div>
+    <button class="btn btn-primary" onclick="startChat()" style="max-width:100%">話しかけてみる 💬　+100pt</button>
   </div>
 </div>
 
@@ -717,9 +642,7 @@
     <div style="background:var(--bg);border-radius:16px;padding:16px;margin-bottom:16px;border:2px solid var(--border)">
       <span class="event-tag online" style="margin-bottom:8px;display:inline-block">🖥 オンライン</span>
       <div style="font-size:.95rem;font-weight:800;color:var(--text);margin-bottom:6px">【社会人トークライブ】IT・映像・スポーツビジネス業界のリアル</div>
-      <div style="font-size:.78rem;color:var(--subtext)">📅 6月15日（土）19:00〜21:00</div>
-      <div style="font-size:.78rem;color:var(--subtext);margin-top:2px">💬 社会人3名がゲスト登壇・質問し放題</div>
-      <div style="font-size:.78rem;color:var(--subtext);margin-top:2px">💰 参加無料</div>
+      <div style="font-size:.78rem;color:var(--subtext)">📅 6月15日（土）19:00〜21:00　💰 参加無料</div>
     </div>
     <div style="background:var(--yellow);border-radius:14px;padding:12px 16px;text-align:center;margin-bottom:20px;border:2px solid #FFD966">
       <div style="font-size:.85rem;font-weight:800;color:#5a4000">参加すると ⭐ +50pt ゲット！</div>
@@ -736,118 +659,178 @@
     <div class="modal-title">⚡ チャレンジクエスト</div>
     <div class="modal-sub">クリアすると大量ポイント＋レアカードが手に入るよ 🃏</div>
     <div class="quest-list" style="margin-bottom:24px">
-      <div class="quest-card" onclick="openWeeklyModal();closeModal('modal-challenge')">
-        <div class="q-icon challenge">🔄</div>
-        <div style="flex:1">
-          <div class="q-type challenge">Challenge</div>
-          <div class="q-title">価値観が真逆の人と話す</div>
-          <div class="q-reward">⭐ +150pt ＋ 🃏「挑戦者」カード</div>
-        </div>
-      </div>
-      <div class="quest-card" onclick="openWeeklyModal();closeModal('modal-challenge')">
-        <div class="q-icon challenge">🌏</div>
-        <div style="flex:1">
-          <div class="q-type challenge">Challenge</div>
-          <div class="q-title">海外に出た人と話す</div>
-          <div class="q-reward">⭐ +150pt ＋ 🃏「越境者」カード</div>
-        </div>
-      </div>
-      <div class="quest-card" onclick="openWeeklyModal();closeModal('modal-challenge')">
-        <div class="q-icon challenge">😱</div>
-        <div style="flex:1">
-          <div class="q-type challenge">Challenge</div>
-          <div class="q-title">絶対やらないと思ってた仕事の人と話す</div>
-          <div class="q-reward">⭐ +200pt ＋ 視野+10%</div>
-        </div>
-      </div>
+      <div class="quest-card" onclick="closeModal('modal-challenge');switchTab('mentors',null)"><div class="q-icon challenge">🔄</div><div style="flex:1"><div class="q-type challenge">Challenge</div><div class="q-title">価値観が真逆の人と話す</div><div class="q-reward">⭐ +150pt ＋ 🃏「挑戦者」カード</div></div></div>
+      <div class="quest-card" onclick="closeModal('modal-challenge');switchTab('mentors',null)"><div class="q-icon challenge">🌏</div><div style="flex:1"><div class="q-type challenge">Challenge</div><div class="q-title">海外に出た人と話す</div><div class="q-reward">⭐ +150pt ＋ 🃏「越境者」カード</div></div></div>
+      <div class="quest-card" onclick="closeModal('modal-challenge');switchTab('mentors',null)"><div class="q-icon challenge">😱</div><div style="flex:1"><div class="q-type challenge">Challenge</div><div class="q-title">絶対やらないと思ってた仕事の人と話す</div><div class="q-reward">⭐ +200pt ＋ 視野+10%</div></div></div>
     </div>
-    <button class="btn btn-sub" onclick="closeModal('modal-challenge')" style="max-width:100%">閉じる</button>
+    <button class="btn" style="background:#F0E6FF;color:var(--subtext);padding:12px 24px;width:100%;max-width:100%" onclick="closeModal('modal-challenge')">閉じる</button>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-  // Onboarding counter
-  let count = 0;
-  const iv = setInterval(() => {
-    count++;
-    document.getElementById('counter').textContent = count;
-    const pct = ((count/20000)*100).toFixed(2);
-    document.getElementById('shock-bar').style.width = (count/200)+'%';
-    document.getElementById('shock-pct').textContent = pct+'%';
-    document.getElementById('shock-val').textContent = pct+'%';
-    if (count >= 13) clearInterval(iv);
-  }, 80);
+// ===== MENTOR DATA =====
+const mentors = [
+  {
+    face:'🧑‍💻', bg:'linear-gradient(135deg,#A78BFA,#60A5FA)',
+    name:'佐藤 颯太（22歳）', job:'ITエンジニア · 東京大学3年',
+    from:'宮城県出身 · 元野球部',
+    tags:['IT','エンジニア','地方出身'],tagCls:['purple','purple','green'],
+    bio:'「やりたいことなんて全然なかった。でもプログラミングを触ったら止まらなくなった」',
+    match:22, stable:[65,8], local:[75,10], challenge:[30,90]
+  },
+  {
+    face:'👩‍🎨', bg:'linear-gradient(135deg,#F9A8D4,#FCD34D)',
+    name:'田中 花（24歳）', job:'映像ディレクター · フリーランス',
+    from:'栃木県出身 · 元バスケ部 🏀',
+    tags:['映像','クリエイター','栃木出身'],tagCls:['pink','pink','green'],
+    bio:'「同じバスケ部出身！地元から出てみたら世界が全然違って見えた」',
+    match:35, stable:[60,20], local:[85,15], challenge:[20,80]
+  },
+  {
+    face:'🧑‍🌾', bg:'linear-gradient(135deg,#6EE7B7,#60A5FA)',
+    name:'鈴木 大地（25歳）', job:'地方創生NPO · 青年海外協力隊経験',
+    from:'北海道出身 · 元サッカー部',
+    tags:['地方創生','海外','ボランティア'],tagCls:['green','purple','green'],
+    bio:'「大学でアフリカに行って、地方の課題が世界と繋がってると知った」',
+    match:12, stable:[30,5], local:[40,20], challenge:[85,95]
+  },
+  {
+    face:'👩‍💼', bg:'linear-gradient(135deg,#FCA5A5,#F9A8D4)',
+    name:'山田 彩（23歳）', job:'スポーツマーケター · 慶應義塾大学院',
+    from:'埼玉県出身 · 元陸上部',
+    tags:['スポーツ','マーケ','ビジネス'],tagCls:['pink','purple','green'],
+    bio:'「スポーツが好きならスポーツビジネスって選択肢、意外と知られてないよ」',
+    match:48, stable:[70,55], local:[50,30], challenge:[50,60]
+  },
+];
 
-  // Books
-  const books = [
-    {e:'🏀',l:'スポーツ',u:true},{e:'🎬',l:'映像制作',u:true},
-    {e:'💻',l:'IT',u:true},{e:'🌱',l:'地方創生',u:true},
-    {e:'📊',l:'マーケ',u:true},{e:'🎨',l:'デザイン',u:false},
-    {e:'🏥',l:'医療',u:false},{e:'✈️',l:'海外・旅',u:false},
-    {e:'🍳',l:'料理・食',u:false},{e:'🔬',l:'研究',u:false},
-    {e:'📝',l:'教育',u:false},{e:'🎵',l:'音楽',u:false},
-  ];
+const bookData = [
+  // row1: unlocked
+  [{t:'スポーツ\nビジネス',c:'#FF8FAB',h:75},{t:'映像\n制作',c:'#A78BFA',h:85},{t:'IT・\nエンジニア',c:'#60A5FA',h:70},{t:'地方\n創生',c:'#6EE7B7',h:80},{t:'マーケ\nティング',c:'#FCD34D',h:65},{t:'デザイン',c:'#F9A8D4',h:78},],
+  // row2: mix
+  [{t:'海外・旅',c:'#93C5FD',h:72,locked:true},{t:'医療・\n福祉',c:'#FCA5A5',h:68,locked:true},{t:'教育・\n学校',c:'#86EFAC',h:76,locked:true},{t:'料理・\nフード',c:'#FDE68A',h:62,locked:true},{t:'音楽・\n芸術',c:'#C4B5FD',h:80,locked:true},{t:'研究・\n科学',c:'#67E8F9',h:74,locked:true}],
+];
 
-  function renderShelf() {
-    const s = document.getElementById('bookshelf'); s.innerHTML='';
-    books.forEach(b => {
-      const d = document.createElement('div');
-      d.className = 'book '+(b.u?'unlocked':'locked');
-      d.innerHTML = `<div class="book-emoji">${b.e}</div><div class="book-label">${b.l}</div>`;
-      if (b.u) d.onclick = () => showToast('📖 '+b.l+'の本を開いたよ！');
-      s.appendChild(d);
+function renderShelves(){
+  bookData.forEach((row,ri)=>{
+    const el=document.getElementById('shelf-row'+(ri+1));
+    el.innerHTML='';
+    row.forEach(b=>{
+      const d=document.createElement('div');
+      d.className='book-spine'+(b.locked?' locked':'');
+      d.style.cssText=`background:${b.c};width:${Math.floor(38+Math.random()*10)}px;height:${b.h}px;`;
+      d.innerHTML=`<span class="book-title">${b.t}</span>${b.locked?'<span class="book-lock">🔒</span>':''}`;
+      if(!b.locked) d.onclick=()=>showToast('📖 '+b.t.replace('\n','')+'の本を開いたよ！');
+      el.appendChild(d);
     });
-  }
+  });
+}
 
-  function startApp() {
-    document.getElementById('screen-onboarding').classList.remove('active');
-    document.getElementById('screen-main').classList.add('active');
-    renderShelf();
-  }
+function renderMentors(){
+  const grid=document.getElementById('mentor-grid');
+  grid.innerHTML='';
+  mentors.forEach((m,i)=>{
+    const d=document.createElement('div');
+    d.className='mentor-card';
+    d.innerHTML=`
+      <div class="face-wrap">
+        <div class="face" style="background:${m.bg}">${m.face}</div>
+        <div class="face-badge">⭐</div>
+      </div>
+      <div class="mentor-info">
+        <div class="mentor-name">${m.name}</div>
+        <div class="mentor-job">${m.job}</div>
+        <div style="font-size:.7rem;color:var(--subtext);margin-bottom:6px">${m.from}</div>
+        <div class="mentor-tags">${m.tags.map((t,j)=>`<span class="tag ${m.tagCls[j]}">${t}</span>`).join('')}</div>
+        <div class="mentor-match">
+          <span>一致率</span>
+          <div class="match-bar"><div class="match-fill" style="width:${m.match}%"></div></div>
+          <span style="font-weight:800;color:#D05080">${m.match}%</span>
+        </div>
+      </div>
+      <button class="mentor-btn" onclick="event.stopPropagation();openMentor(${i})">話す</button>
+    `;
+    d.onclick=()=>openMentor(i);
+    grid.appendChild(d);
+  });
+}
 
-  function showParent() {
-    document.getElementById('screen-main').classList.remove('active');
-    document.getElementById('screen-parent').classList.add('active');
-  }
+function openMentor(i){
+  const m=mentors[i];
+  document.getElementById('mentor-modal-content').innerHTML=`
+    <div class="face-large" style="background:${m.bg}">${m.face}</div>
+    <div class="mentor-modal-name">${m.name}</div>
+    <div class="mentor-modal-job">${m.job}</div>
+    <div style="font-size:.72rem;color:var(--subtext);margin-bottom:8px">${m.from}</div>
+    <div class="mentor-modal-tags">${m.tags.map((t,j)=>`<span class="tag ${m.tagCls[j]}">${t}</span>`).join('')}</div>
+    <div class="mentor-modal-bio">${m.bio}</div>
+  `;
+  document.getElementById('match-pct').textContent=m.match+'%';
+  document.getElementById('mentor-them-name').textContent='● '+m.name.split('（')[0];
+  document.getElementById('bar-stable-you').style.width='70%';
+  document.getElementById('bar-stable-them').style.width=m.stable[1]+'%';
+  document.getElementById('bar-local-you').style.width='80%';
+  document.getElementById('bar-local-them').style.width=m.local[1]+'%';
+  document.getElementById('bar-challenge-you').style.width='25%';
+  document.getElementById('bar-challenge-them').style.width=m.challenge[1]+'%';
+  document.getElementById('modal-mentor').classList.add('open');
+}
 
-  function showMain() {
-    document.getElementById('screen-parent').classList.remove('active');
-    document.getElementById('screen-main').classList.add('active');
-  }
+// Onboarding bookspines
+const obColors=['#FF8FAB','#A78BFA','#6EE7B7','#FCD34D','#60A5FA','#F9A8D4','#FCA5A5','#86EFAC','#FDE68A'];
+const obTitles=['英語','数学','国語','物理','美術','音楽','体育','歴史','化学'];
+const obEl=document.getElementById('ob-books');
+obColors.forEach((c,i)=>{
+  const d=document.createElement('div');
+  d.className='ob-book';
+  d.style.cssText=`background:${c};height:${50+Math.random()*30}px;`;
+  d.textContent=obTitles[i];
+  obEl.appendChild(d);
+});
 
-  function setNav(el) {
-    document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-    el.classList.add('active');
-  }
+// Counter
+let count=0;
+const iv=setInterval(()=>{
+  count++;
+  document.getElementById('counter').textContent=count;
+  const pct=((count/20000)*100).toFixed(2);
+  document.getElementById('shock-bar').style.width=(count/200)+'%';
+  document.getElementById('shock-pct').textContent=pct+'%';
+  document.getElementById('shock-val').textContent=pct+'%';
+  if(count>=13)clearInterval(iv);
+},80);
 
-  function switchTab(name, btn) {
-    document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
-    document.getElementById('tab-'+name).classList.add('active');
-    if (btn) { document.querySelectorAll('.switch-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); }
-  }
+function startApp(){
+  document.getElementById('screen-onboarding').classList.remove('active');
+  document.getElementById('screen-main').classList.add('active');
+  renderShelves();
+  renderMentors();
+}
 
-  function openDailyModal()     { document.getElementById('modal-daily').classList.add('open'); }
-  function openWeeklyModal()    { document.getElementById('modal-weekly').classList.add('open'); }
-  function openEventModal()     { document.getElementById('modal-event').classList.add('open'); }
-  function openChallengeModal() { document.getElementById('modal-challenge').classList.add('open'); }
-  function closeModal(id)       { document.getElementById(id).classList.remove('open'); }
-
-  function completeDaily(btn) {
-    btn.classList.add('selected');
-    setTimeout(() => { closeModal('modal-daily'); showToast('🎉 +10pt ゲット！答えてくれてありがとう'); }, 500);
-  }
-
-  function startChat() { closeModal('modal-weekly'); showToast('💬 田中さんとのマッチング開始！対話完了で +100pt'); }
-
-  function joinEvent() { closeModal('modal-event'); showToast('🎪 参加申し込み完了！当日 +50pt ゲットできるよ'); }
-
-  function showToast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg; t.classList.add('show');
-    setTimeout(()=>t.classList.remove('show'), 2800);
-  }
+function showParent(){
+  document.getElementById('screen-main').classList.remove('active');
+  document.getElementById('screen-parent').classList.add('active');
+}
+function showMain(){
+  document.getElementById('screen-parent').classList.remove('active');
+  document.getElementById('screen-main').classList.add('active');
+}
+function setNav(el){document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));el.classList.add('active');}
+function switchTab(name,btn){
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  if(btn){document.querySelectorAll('.switch-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+}
+function openDailyModal(){document.getElementById('modal-daily').classList.add('open');}
+function openEventModal(){document.getElementById('modal-event').classList.add('open');}
+function openChallengeModal(){document.getElementById('modal-challenge').classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+function completeDaily(btn){btn.classList.add('selected');setTimeout(()=>{closeModal('modal-daily');showToast('🎉 +10pt ゲット！');},500);}
+function startChat(){closeModal('modal-mentor');showToast('💬 マッチング開始！対話完了で +100pt');}
+function joinEvent(){closeModal('modal-event');showToast('🎪 参加申し込み完了！ +50pt ゲットできるよ');}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800);}
 </script>
 </body>
 </html>
