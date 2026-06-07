@@ -1,0 +1,1442 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ヨリミチライブラリ</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --primary: #FF6B9D;
+      --secondary: #A78BFA;
+      --accent: #34D399;
+      --yellow: #FBBF24;
+      --blue: #60A5FA;
+      --bg: #FFF5F9;
+      --card: #FFFFFF;
+      --text: #3D2C4E;
+      --subtext: #9D8AAE;
+      --border: #F3E8FF;
+    }
+
+    body {
+      font-family: 'Nunito', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .screen { display: none; min-height: 100vh; }
+    .screen.active { display: flex; flex-direction: column; }
+
+    /* ===== ONBOARDING ===== */
+    #screen-onboarding {
+      background: linear-gradient(160deg, #FFF0F7 0%, #F5EEFF 50%, #EEF5FF 100%);
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px 24px;
+    }
+
+    .mascot {
+      font-size: 5rem;
+      margin-bottom: 8px;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, #FF6B9D, #A78BFA);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 6px;
+    }
+
+    .tagline {
+      font-size: 0.85rem;
+      color: var(--subtext);
+      margin-bottom: 36px;
+      line-height: 1.6;
+    }
+
+    .shock-box {
+      background: white;
+      border-radius: 28px;
+      padding: 28px 24px;
+      max-width: 360px;
+      margin-bottom: 28px;
+      box-shadow: 0 8px 32px rgba(167, 139, 250, 0.15);
+      border: 2px solid var(--border);
+    }
+
+    .shock-label-top {
+      font-size: 0.85rem;
+      color: var(--subtext);
+      margin-bottom: 12px;
+    }
+
+    .shock-number {
+      font-size: 4rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, #FF6B9D, #A78BFA);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1;
+    }
+
+    .shock-unit {
+      font-size: 1rem;
+      color: var(--subtext);
+      margin-bottom: 16px;
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 16px 0;
+    }
+
+    .progress-bar-wrap {
+      background: #F3E8FF;
+      border-radius: 100px;
+      height: 10px;
+      margin: 12px 0 6px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      border-radius: 100px;
+      background: linear-gradient(90deg, #FF6B9D, #A78BFA);
+      transition: width 1s ease;
+    }
+
+    .progress-label {
+      font-size: 0.75rem;
+      color: var(--subtext);
+      text-align: right;
+    }
+
+    .shock-text {
+      font-size: 0.9rem;
+      color: var(--text);
+      line-height: 1.6;
+      margin-top: 12px;
+    }
+
+    .shock-highlight {
+      color: var(--primary);
+      font-weight: 900;
+      font-size: 1.1rem;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #FF6B9D, #A78BFA);
+      color: white;
+      border: none;
+      padding: 16px 40px;
+      border-radius: 100px;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      width: 100%;
+      max-width: 300px;
+      box-shadow: 0 6px 20px rgba(255, 107, 157, 0.35);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 28px rgba(255, 107, 157, 0.45);
+    }
+
+    .decorations {
+      position: fixed;
+      pointer-events: none;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .deco {
+      position: absolute;
+      font-size: 1.5rem;
+      opacity: 0.15;
+      animation: float linear infinite;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+      10% { opacity: 0.15; }
+      90% { opacity: 0.15; }
+      100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+    }
+
+    /* ===== NAV BAR ===== */
+    .nav-bar {
+      background: white;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 12px rgba(167,139,250,0.1);
+    }
+
+    .nav-logo {
+      font-size: 1.1rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, #FF6B9D, #A78BFA);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-level {
+      background: linear-gradient(135deg, #FF6B9D, #A78BFA);
+      border-radius: 100px;
+      padding: 5px 14px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: white;
+    }
+
+    /* ===== CONTENT ===== */
+    .content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      padding-bottom: 100px;
+    }
+
+    /* ===== WORLD METER ===== */
+    .world-meter {
+      background: linear-gradient(135deg, #FF6B9D, #A78BFA);
+      border-radius: 24px;
+      padding: 24px;
+      margin-bottom: 20px;
+      color: white;
+      text-align: center;
+      box-shadow: 0 8px 24px rgba(255, 107, 157, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .world-meter::before {
+      content: '✨';
+      position: absolute;
+      font-size: 4rem;
+      opacity: 0.15;
+      top: -10px;
+      right: 10px;
+    }
+
+    .world-meter::after {
+      content: '🌟';
+      position: absolute;
+      font-size: 3rem;
+      opacity: 0.15;
+      bottom: -5px;
+      left: 10px;
+    }
+
+    .world-percent {
+      font-size: 3.2rem;
+      font-weight: 900;
+      color: white;
+    }
+
+    .world-label {
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.85);
+      margin-top: 4px;
+    }
+
+    .world-progress-wrap {
+      background: rgba(255,255,255,0.3);
+      border-radius: 100px;
+      height: 10px;
+      margin-top: 14px;
+      overflow: hidden;
+    }
+
+    .world-progress-fill {
+      height: 100%;
+      border-radius: 100px;
+      background: white;
+      width: 2.4%;
+    }
+
+    /* ===== DOOR BANNER ===== */
+    .door-banner {
+      background: white;
+      border-radius: 20px;
+      padding: 18px 20px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      box-shadow: 0 4px 16px rgba(167,139,250,0.12);
+      border: 2px solid #F3E8FF;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .door-banner:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(167,139,250,0.2);
+      border-color: #A78BFA;
+    }
+
+    .door-icon {
+      width: 52px;
+      height: 52px;
+      background: linear-gradient(135deg, #FF6B9D20, #A78BFA20);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      flex-shrink: 0;
+    }
+
+    .door-title {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .door-sub {
+      font-size: 0.75rem;
+      color: var(--subtext);
+      margin-top: 2px;
+    }
+
+    .door-arrow {
+      margin-left: auto;
+      font-size: 1.2rem;
+      color: var(--primary);
+    }
+
+    /* ===== SWITCH BUTTONS ===== */
+    .switch-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 18px;
+      background: white;
+      padding: 6px;
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(167,139,250,0.1);
+    }
+
+    .switch-btn {
+      flex: 1;
+      padding: 10px 8px;
+      border-radius: 12px;
+      border: none;
+      background: transparent;
+      color: var(--subtext);
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+
+    .switch-btn.active {
+      background: linear-gradient(135deg, #FF6B9D, #A78BFA);
+      color: white;
+      box-shadow: 0 4px 12px rgba(255,107,157,0.3);
+    }
+
+    /* ===== QUEST CARDS ===== */
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    .section-title {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .quest-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .quest-card {
+      background: white;
+      border-radius: 20px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 3px 12px rgba(167,139,250,0.08);
+      border: 2px solid transparent;
+    }
+
+    .quest-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(167,139,250,0.15);
+      border-color: var(--border);
+    }
+
+    .quest-card.completed {
+      opacity: 0.55;
+      background: #F9F5FF;
+    }
+
+    .quest-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    .quest-icon.daily { background: #FEF3C7; }
+    .quest-icon.weekly { background: #EDE9FE; }
+    .quest-icon.challenge { background: #FFE4ED; }
+    .quest-icon.done { background: #D1FAE5; }
+
+    .quest-type {
+      font-size: 0.62rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 2px;
+    }
+
+    .quest-type.daily { color: #D97706; }
+    .quest-type.weekly { color: var(--secondary); }
+    .quest-type.challenge { color: var(--primary); }
+    .quest-type.done { color: var(--accent); }
+
+    .quest-title {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.4;
+    }
+
+    .quest-reward {
+      font-size: 0.7rem;
+      color: var(--subtext);
+      margin-top: 3px;
+    }
+
+    .quest-badge {
+      border-radius: 10px;
+      padding: 5px 10px;
+      font-size: 0.68rem;
+      font-weight: 800;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .quest-badge.new {
+      background: #FFE4ED;
+      color: var(--primary);
+    }
+
+    .quest-badge.timer {
+      background: #EDE9FE;
+      color: var(--secondary);
+    }
+
+    .quest-badge.challenge-badge {
+      background: #FFE4ED;
+      color: var(--primary);
+    }
+
+    .quest-badge.done {
+      background: #D1FAE5;
+      color: #059669;
+    }
+
+    /* ===== BOOKSHELF ===== */
+    .bookshelf {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .book {
+      aspect-ratio: 2/3;
+      border-radius: 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+
+    .book.unlocked {
+      background: white;
+      box-shadow: 0 4px 14px rgba(167,139,250,0.15);
+      border: 2px solid var(--border);
+    }
+
+    .book.unlocked:hover {
+      transform: translateY(-4px) scale(1.04);
+      box-shadow: 0 10px 24px rgba(167,139,250,0.25);
+      border-color: var(--secondary);
+    }
+
+    .book.locked {
+      background: #F9F5FF;
+      border: 2px dashed #DDD6FE;
+    }
+
+    .book-emoji { font-size: 1.5rem; }
+    .book.locked .book-emoji { filter: grayscale(1) opacity(0.35); }
+
+    .book-label {
+      font-size: 0.52rem;
+      color: var(--subtext);
+      margin-top: 4px;
+      text-align: center;
+      padding: 0 3px;
+      font-weight: 700;
+    }
+
+    .book.locked .book-label { color: #C4B5FD; }
+
+    /* ===== DAILY Q ===== */
+    .daily-q {
+      background: white;
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 14px rgba(167,139,250,0.1);
+      border: 2px solid var(--border);
+    }
+
+    .daily-q-badge {
+      display: inline-block;
+      background: #FEF3C7;
+      color: #D97706;
+      font-size: 0.68rem;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 100px;
+      margin-bottom: 10px;
+    }
+
+    .daily-q-text {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+
+    .choice-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .choice-btn {
+      background: var(--bg);
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 16px;
+      color: var(--text);
+      font-size: 0.88rem;
+      font-weight: 600;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+
+    .choice-btn:hover {
+      background: #F5EEFF;
+      border-color: var(--secondary);
+    }
+
+    .choice-btn.selected {
+      background: linear-gradient(135deg, #FF6B9D15, #A78BFA15);
+      border-color: var(--primary);
+      color: var(--text);
+    }
+
+    .senpai-card {
+      background: white;
+      border-radius: 16px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+      box-shadow: 0 3px 10px rgba(167,139,250,0.08);
+      border: 2px solid var(--border);
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .senpai-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #FF6B9D, #A78BFA);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .senpai-text {
+      font-size: 0.82rem;
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .senpai-by {
+      font-size: 0.68rem;
+      color: var(--subtext);
+      margin-top: 4px;
+      font-weight: 700;
+    }
+
+    /* ===== BOTTOM NAV ===== */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      border-top: 2px solid var(--border);
+      display: flex;
+      padding: 8px 0 16px;
+      z-index: 100;
+      box-shadow: 0 -4px 20px rgba(167,139,250,0.1);
+    }
+
+    .nav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      padding: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      opacity: 0.4;
+    }
+
+    .nav-item.active {
+      opacity: 1;
+    }
+
+    .nav-item-icon {
+      font-size: 1.3rem;
+    }
+
+    .nav-item.active .nav-item-icon {
+      transform: scale(1.15);
+    }
+
+    .nav-item-label {
+      font-size: 0.6rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    /* ===== MODAL ===== */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(61, 44, 78, 0.4);
+      z-index: 200;
+      align-items: flex-end;
+      justify-content: center;
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-overlay.open { display: flex; }
+
+    .modal {
+      background: white;
+      border-radius: 28px 28px 0 0;
+      padding: 28px 24px 40px;
+      width: 100%;
+      max-width: 480px;
+      animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+
+    .modal-handle {
+      width: 40px;
+      height: 5px;
+      background: var(--border);
+      border-radius: 100px;
+      margin: 0 auto 22px;
+    }
+
+    .modal-title {
+      font-size: 1.3rem;
+      font-weight: 900;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .modal-sub {
+      font-size: 0.82rem;
+      color: var(--subtext);
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    /* Profile chip */
+    .profile-chip {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--bg);
+      border-radius: 16px;
+      padding: 14px 16px;
+      margin-bottom: 16px;
+      border: 2px solid var(--border);
+    }
+
+    .avatar {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #FF6B9D, #A78BFA);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+    }
+
+    .profile-name {
+      font-size: 0.92rem;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .profile-bio {
+      font-size: 0.73rem;
+      color: var(--subtext);
+      margin-top: 2px;
+    }
+
+    /* Score chip */
+    .score-chip {
+      background: linear-gradient(135deg, #FFE4ED, #EDE9FE);
+      border-radius: 16px;
+      padding: 14px 16px;
+      text-align: center;
+      margin-bottom: 18px;
+      border: 2px solid var(--border);
+    }
+
+    .score-number {
+      font-size: 1.1rem;
+      font-weight: 900;
+      color: var(--text);
+    }
+
+    .score-highlight { color: var(--primary); font-size: 1.4rem; }
+    .score-label { font-size: 0.73rem; color: var(--subtext); margin-top: 3px; }
+
+    /* Battle bars */
+    .battle-section-title {
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: var(--subtext);
+      margin-bottom: 10px;
+    }
+
+    .battle-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .battle-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--subtext);
+      width: 70px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .battle-bar-wrap {
+      flex: 1;
+      height: 10px;
+      background: var(--border);
+      border-radius: 100px;
+      overflow: hidden;
+      display: flex;
+    }
+
+    .battle-you {
+      height: 100%;
+      border-radius: 100px;
+      background: linear-gradient(90deg, #FF6B9D, #A78BFA);
+    }
+
+    .battle-them {
+      height: 100%;
+      border-radius: 100px;
+      background: linear-gradient(90deg, #34D399, #60A5FA);
+      margin-left: auto;
+    }
+
+    .battle-legend {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.65rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .legend-you { color: var(--primary); }
+    .legend-them { color: var(--accent); }
+
+    /* ===== PARENT SCREEN ===== */
+    #screen-parent { background: var(--bg); }
+
+    .parent-hero {
+      background: linear-gradient(135deg, #34D399, #60A5FA);
+      padding: 24px 20px;
+      color: white;
+    }
+
+    .parent-title {
+      font-size: 1.1rem;
+      font-weight: 900;
+      margin-bottom: 4px;
+    }
+
+    .parent-sub { font-size: 0.8rem; opacity: 0.9; }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: 18px;
+      padding: 16px;
+      text-align: center;
+      box-shadow: 0 3px 12px rgba(167,139,250,0.08);
+      border: 2px solid var(--border);
+    }
+
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, #FF6B9D, #A78BFA);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .stat-label { font-size: 0.68rem; color: var(--subtext); margin-top: 3px; font-weight: 700; }
+
+    .feedback-card {
+      background: white;
+      border-radius: 18px;
+      padding: 16px 18px;
+      margin-bottom: 10px;
+      box-shadow: 0 3px 10px rgba(167,139,250,0.08);
+      border: 2px solid var(--border);
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .fb-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--primary);
+      margin-top: 6px;
+      flex-shrink: 0;
+    }
+
+    .fb-text { font-size: 0.83rem; color: var(--text); line-height: 1.6; }
+    .fb-by { font-size: 0.68rem; color: var(--subtext); margin-top: 4px; font-weight: 700; }
+
+    .interest-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: white;
+      border: 2px solid var(--border);
+      border-radius: 100px;
+      padding: 6px 14px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text);
+      margin: 4px;
+      box-shadow: 0 2px 8px rgba(167,139,250,0.1);
+    }
+
+    /* ===== TOAST ===== */
+    .toast {
+      position: fixed;
+      top: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, #FF6B9D, #A78BFA);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 100px;
+      font-size: 0.85rem;
+      font-weight: 800;
+      z-index: 500;
+      opacity: 0;
+      transition: opacity 0.3s;
+      white-space: nowrap;
+      box-shadow: 0 6px 20px rgba(255,107,157,0.35);
+    }
+
+    .toast.show { opacity: 1; }
+
+    .back-btn {
+      background: none;
+      border: none;
+      color: var(--primary);
+      font-size: 0.9rem;
+      font-weight: 800;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .empty-spacer { height: 16px; }
+  </style>
+</head>
+<body>
+
+<!-- 浮遊デコ -->
+<div class="decorations" id="decos"></div>
+
+<!-- ===== ONBOARDING ===== -->
+<div id="screen-onboarding" class="screen active">
+  <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;width:100%;">
+    <div class="mascot">📚</div>
+    <div class="logo">ヨリミチライブラリ</div>
+    <div class="tagline">部活と勉強の往復から<br>ちょっとだけ寄り道しよう 🌸</div>
+
+    <div class="shock-box">
+      <div class="shock-label-top">あなたが知っている職業の数は？</div>
+      <div class="shock-number" id="counter">0</div>
+      <div class="shock-unit">種類</div>
+      <div class="divider"></div>
+      <div style="font-size:0.85rem;color:var(--subtext);margin-bottom:8px;">世界には <strong style="color:var(--text);">20,000種類以上</strong> の職業があります</div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="shock-bar" style="width:0%"></div>
+      </div>
+      <div class="progress-label" id="shock-percent">0.00%</div>
+      <div class="shock-text">
+        あなたはまだ世界の<br>
+        <span class="shock-highlight" id="shock-text-val">0.00%</span>しか知らない
+      </div>
+    </div>
+
+    <button class="btn-primary" onclick="startApp()">本棚を開く ✨</button>
+  </div>
+</div>
+
+<!-- ===== MAIN APP ===== -->
+<div id="screen-main" class="screen">
+  <div class="nav-bar">
+    <div class="nav-logo">📚 ヨリミチライブラリ</div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <div class="nav-level">✨ Lv.3 探索者</div>
+      <div onclick="showParent()" style="cursor:pointer;font-size:1.3rem;">👨‍👩‍👧</div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- World Meter -->
+    <div class="world-meter">
+      <div style="font-size:0.75rem;opacity:0.9;margin-bottom:4px;">🌍 あなたの世界の広さ</div>
+      <div class="world-percent">2.4%</div>
+      <div class="world-label">登録時 0.06% → 現在 2.4%（40倍に成長！🎉）</div>
+      <div class="world-progress-wrap">
+        <div class="world-progress-fill"></div>
+      </div>
+    </div>
+
+    <!-- Door Banner -->
+    <div class="door-banner" onclick="openWeeklyModal()">
+      <div class="door-icon">🚪</div>
+      <div>
+        <div class="door-title">今週の扉が待ってるよ！</div>
+        <div class="door-sub">ランダムな先輩とマッチング · 残り2日</div>
+      </div>
+      <div class="door-arrow">→</div>
+    </div>
+
+    <!-- Tab Switch -->
+    <div class="switch-row">
+      <button class="switch-btn active" onclick="switchTab('quests', this)">📋 クエスト</button>
+      <button class="switch-btn" onclick="switchTab('shelf', this)">📚 本棚</button>
+      <button class="switch-btn" onclick="switchTab('daily', this)">💬 今日の問い</button>
+    </div>
+
+    <!-- QUESTS TAB -->
+    <div class="tab-content active" id="tab-quests">
+      <div class="section-title">🎯 クエスト一覧</div>
+      <div class="quest-list">
+
+        <div class="quest-card" onclick="openDailyModal()">
+          <div class="quest-icon daily">🌅</div>
+          <div class="quest-info">
+            <div class="quest-type daily">Daily Quest</div>
+            <div class="quest-title">今日の価値観に答えよう</div>
+            <div class="quest-reward">📖 +1冊 本棚に追加</div>
+          </div>
+          <div class="quest-badge new">未達成</div>
+        </div>
+
+        <div class="quest-card" onclick="openWeeklyModal()">
+          <div class="quest-icon weekly">🚪</div>
+          <div class="quest-info">
+            <div class="quest-type weekly">Weekly Quest</div>
+            <div class="quest-title">今週の扉を開けろ！</div>
+            <div class="quest-reward">🌟 新しい分野が解放される</div>
+          </div>
+          <div class="quest-badge timer">残り2日</div>
+        </div>
+
+        <div class="quest-card completed">
+          <div class="quest-icon done">✅</div>
+          <div class="quest-info">
+            <div class="quest-type done">Completed</div>
+            <div class="quest-title">先週の扉を開いた</div>
+            <div class="quest-reward">🎬 映像制作の世界を解放済み</div>
+          </div>
+          <div class="quest-badge done">✓ 達成</div>
+        </div>
+
+        <div class="quest-card" onclick="openChallengeModal()">
+          <div class="quest-icon challenge">⚡</div>
+          <div class="quest-info">
+            <div class="quest-type challenge">Challenge</div>
+            <div class="quest-title">自分と価値観が真逆の人と話せ</div>
+            <div class="quest-reward">🃏 レアカード「挑戦者」獲得</div>
+          </div>
+          <div class="quest-badge challenge-badge">挑戦中</div>
+        </div>
+
+        <div class="quest-card" onclick="openChallengeModal()">
+          <div class="quest-icon challenge">🌏</div>
+          <div class="quest-info">
+            <div class="quest-type challenge">Challenge</div>
+            <div class="quest-title">海外に出た人と話せ</div>
+            <div class="quest-reward">🃏 レアカード「越境者」獲得</div>
+          </div>
+          <div class="quest-badge challenge-badge">未挑戦</div>
+        </div>
+
+        <div class="quest-card" onclick="openChallengeModal()">
+          <div class="quest-icon challenge">😱</div>
+          <div class="quest-info">
+            <div class="quest-type challenge">Challenge</div>
+            <div class="quest-title">絶対やらないと思ってた仕事の人と話せ</div>
+            <div class="quest-reward">🃏 視野+10%</div>
+          </div>
+          <div class="quest-badge challenge-badge">未挑戦</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SHELF TAB -->
+    <div class="tab-content" id="tab-shelf">
+      <div class="section-title">📚 あなたの本棚</div>
+      <div style="font-size:0.78rem;color:var(--subtext);margin-bottom:14px;font-weight:600;">対話するたびに新しい本が増えていくよ 🌸</div>
+      <div class="bookshelf" id="bookshelf"></div>
+
+      <div class="section-title">🃏 コレクション</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;">
+        <div style="background:linear-gradient(135deg,#FF6B9D,#A78BFA);border-radius:14px;padding:12px 16px;color:white;font-size:0.8rem;font-weight:800;">⚡ 挑戦者</div>
+        <div style="background:linear-gradient(135deg,#FBBF24,#F59E0B);border-radius:14px;padding:12px 16px;color:white;font-size:0.8rem;font-weight:800;">🏡 地元愛</div>
+        <div style="background:#F9F5FF;border:2px dashed #DDD6FE;border-radius:14px;padding:12px 16px;color:#C4B5FD;font-size:0.8rem;font-weight:800;">🔒 越境者</div>
+        <div style="background:#F9F5FF;border:2px dashed #DDD6FE;border-radius:14px;padding:12px 16px;color:#C4B5FD;font-size:0.8rem;font-weight:800;">🔒 視野拡張</div>
+      </div>
+    </div>
+
+    <!-- DAILY TAB -->
+    <div class="tab-content" id="tab-daily">
+      <div class="section-title">💬 今日の問い</div>
+      <div class="daily-q">
+        <div class="daily-q-badge">🌅 Today's Question</div>
+        <div class="daily-q-text">お金と自由、どっちが大事だと思う？🤔</div>
+        <div class="choice-list">
+          <button class="choice-btn" onclick="selectChoice(this)">💰 お金が大事。安定があってこそ自由になれる</button>
+          <button class="choice-btn" onclick="selectChoice(this)">🕊️ 自由が大事。時間とやりたいことが一番</button>
+          <button class="choice-btn" onclick="selectChoice(this)">🤷 どちらともいえない</button>
+        </div>
+      </div>
+
+      <div style="font-size:0.8rem;color:var(--subtext);font-weight:700;margin-bottom:10px;">👀 先輩たちの答えは…</div>
+
+      <div class="senpai-card">
+        <div class="senpai-avatar">👦</div>
+        <div>
+          <div class="senpai-text">「最初はお金と思ってたけど、就活してたら<strong>やりたいこと</strong>の方が大事だと気づいた」</div>
+          <div class="senpai-by">東京大学3年 · 栃木県出身</div>
+        </div>
+      </div>
+
+      <div class="senpai-card">
+        <div class="senpai-avatar">👩</div>
+        <div>
+          <div class="senpai-text">「自由のために起業した。最初の3年は<strong>全然お金なかった</strong>けど後悔してない」</div>
+          <div class="senpai-by">スタートアップ創業者 · 25歳</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="bottom-nav">
+    <div class="nav-item active" onclick="setNav(this)">
+      <div class="nav-item-icon">🏠</div>
+      <div class="nav-item-label">ホーム</div>
+    </div>
+    <div class="nav-item" onclick="setNav(this);openWeeklyModal()">
+      <div class="nav-item-icon">🚪</div>
+      <div class="nav-item-label">今週の扉</div>
+    </div>
+    <div class="nav-item" onclick="setNav(this);switchTab('shelf',null)">
+      <div class="nav-item-icon">📚</div>
+      <div class="nav-item-label">本棚</div>
+    </div>
+    <div class="nav-item" onclick="setNav(this);showParent()">
+      <div class="nav-item-icon">👨‍👩‍👧</div>
+      <div class="nav-item-label">親へ</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PARENT ===== -->
+<div id="screen-parent" class="screen">
+  <div class="nav-bar">
+    <button class="back-btn" onclick="showMain()">← 戻る</button>
+    <div class="nav-logo">保護者ダッシュボード</div>
+    <div style="width:40px;"></div>
+  </div>
+  <div class="content">
+    <div class="parent-hero" style="border-radius:0 0 24px 24px;margin:-20px -20px 20px;">
+      <div class="parent-title">👧 とちおとめちゃんの今月の変化</div>
+      <div class="parent-sub">2024年6月 · 3週間目</div>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-card"><div class="stat-number">8</div><div class="stat-label">対話した先輩の数</div></div>
+      <div class="stat-card"><div class="stat-number">2.4%</div><div class="stat-label">世界の広さ（登録時0.06%）</div></div>
+      <div class="stat-card"><div class="stat-number">5</div><div class="stat-label">クリアしたクエスト</div></div>
+      <div class="stat-card"><div class="stat-number">12</div><div class="stat-label">本棚に並んだ本</div></div>
+    </div>
+
+    <div class="section-title">💌 先輩からのひとこと</div>
+
+    <div class="feedback-card">
+      <div class="fb-dot"></div>
+      <div>
+        <div class="fb-text">「バスケの話から<strong>スポーツビジネス</strong>に興味が広がっていました。好きなことと仕事を繋げる視点が生まれてきています」</div>
+        <div class="fb-by">早稲田大学3年 · 先週の対話より</div>
+      </div>
+    </div>
+
+    <div class="feedback-card">
+      <div class="fb-dot" style="background:var(--secondary);"></div>
+      <div>
+        <div class="fb-text">「映像制作の話をしたら目が輝いていました。<strong>『こんな仕事があるんだ』</strong>と驚いていて、自分では選ばない分野だったと思います」</div>
+        <div class="fb-by">映像クリエイター · 2週間前の対話より</div>
+      </div>
+    </div>
+
+    <div class="feedback-card">
+      <div class="fb-dot" style="background:var(--accent);"></div>
+      <div>
+        <div class="fb-text">「地元・栃木で起業した人の話を聞いて、<strong>地方でも面白いことができる</strong>という気づきがあったようです」</div>
+        <div class="fb-by">地方起業家 · 3週間前の対話より</div>
+      </div>
+    </div>
+
+    <div class="section-title">🗺️ 広がった興味マップ</div>
+    <div style="margin-bottom:24px;">
+      <span class="interest-tag">🏀 スポーツビジネス</span>
+      <span class="interest-tag">🎬 映像制作</span>
+      <span class="interest-tag">🌱 地方創生</span>
+      <span class="interest-tag">📊 マーケティング</span>
+      <span class="interest-tag" style="border-style:dashed;color:var(--subtext);">+ もっと広がる予定</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== MODALS ===== -->
+
+<!-- Daily -->
+<div class="modal-overlay" id="modal-daily" onclick="closeModal('modal-daily')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div class="modal-title">🌅 今日の問い</div>
+    <div class="modal-sub">答えるだけでOK！正解はないよ 🌸</div>
+    <div class="daily-q-text">地元に残る？それとも外に出る？</div>
+    <div class="choice-list" style="margin-bottom:24px;margin-top:16px;">
+      <button class="choice-btn" onclick="completeDaily(this)">🏡 地元に残りたい</button>
+      <button class="choice-btn" onclick="completeDaily(this)">🌆 外に出てみたい</button>
+      <button class="choice-btn" onclick="completeDaily(this)">🤔 まだわからない</button>
+    </div>
+  </div>
+</div>
+
+<!-- Weekly -->
+<div class="modal-overlay" id="modal-weekly" onclick="closeModal('modal-weekly')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div class="modal-title">🚪 今週の扉が開いた！</div>
+    <div class="modal-sub">あなたが選んでいない分野の先輩とランダムマッチングしました ✨</div>
+
+    <div class="profile-chip">
+      <div class="avatar">🎬</div>
+      <div>
+        <div class="profile-name">田中 海斗さん（23歳）</div>
+        <div class="profile-bio">映像ディレクター · 宮城県出身 · 元サッカー部</div>
+      </div>
+    </div>
+
+    <div class="score-chip">
+      <div class="score-number">価値観一致率 <span class="score-highlight">18%</span></div>
+      <div class="score-label">⚡ 違いが大きいほど視野が広がるよ！</div>
+    </div>
+
+    <div class="battle-legend">
+      <span class="legend-you">● あなた</span>
+      <span class="legend-them">● 田中さん</span>
+    </div>
+    <div class="battle-section-title">価値観バトル</div>
+
+    <div class="battle-row">
+      <div class="battle-label">安定志向</div>
+      <div class="battle-bar-wrap">
+        <div class="battle-you" style="width:70%;"></div>
+        <div class="battle-them" style="width:15%;"></div>
+      </div>
+    </div>
+    <div class="battle-row">
+      <div class="battle-label">地元愛</div>
+      <div class="battle-bar-wrap">
+        <div class="battle-you" style="width:80%;"></div>
+        <div class="battle-them" style="width:12%;"></div>
+      </div>
+    </div>
+    <div class="battle-row" style="margin-bottom:20px;">
+      <div class="battle-label">挑戦志向</div>
+      <div class="battle-bar-wrap">
+        <div class="battle-you" style="width:25%;"></div>
+        <div class="battle-them" style="width:85%;"></div>
+      </div>
+    </div>
+
+    <button class="btn-primary" onclick="startChat()" style="max-width:100%;">話しかけてみる 💬</button>
+  </div>
+</div>
+
+<!-- Challenge -->
+<div class="modal-overlay" id="modal-challenge" onclick="closeModal('modal-challenge')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div class="modal-title">⚡ チャレンジクエスト</div>
+    <div class="modal-sub">クリアするとレアカードが手に入るよ 🃏</div>
+    <div class="quest-list" style="margin-bottom:24px;">
+      <div class="quest-card" onclick="openWeeklyModal();closeModal('modal-challenge')">
+        <div class="quest-icon challenge">🔄</div>
+        <div class="quest-info">
+          <div class="quest-type challenge">Challenge</div>
+          <div class="quest-title">価値観が真逆の人と話す</div>
+          <div class="quest-reward">🃏 レアカード「挑戦者」</div>
+        </div>
+      </div>
+      <div class="quest-card" onclick="openWeeklyModal();closeModal('modal-challenge')">
+        <div class="quest-icon challenge">🌏</div>
+        <div class="quest-info">
+          <div class="quest-type challenge">Challenge</div>
+          <div class="quest-title">海外に出た人と話す</div>
+          <div class="quest-reward">🃏 レアカード「越境者」</div>
+        </div>
+      </div>
+      <div class="quest-card" onclick="openWeeklyModal();closeModal('modal-challenge')">
+        <div class="quest-icon challenge">😱</div>
+        <div class="quest-info">
+          <div class="quest-type challenge">Challenge</div>
+          <div class="quest-title">絶対やらないと思ってた仕事の人と話す</div>
+          <div class="quest-reward">🃏 視野+10%</div>
+        </div>
+      </div>
+    </div>
+    <button class="btn-primary" onclick="closeModal('modal-challenge')" style="max-width:100%;background:var(--border);color:var(--subtext);box-shadow:none;">閉じる</button>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+  // Floating decorations
+  const decoEmojis = ['⭐','🌸','✨','💫','🌟','🎀','🍀','🎈'];
+  const decoContainer = document.getElementById('decos');
+  for (let i = 0; i < 12; i++) {
+    const d = document.createElement('div');
+    d.className = 'deco';
+    d.textContent = decoEmojis[Math.floor(i % decoEmojis.length)];
+    d.style.left = Math.random() * 100 + '%';
+    d.style.animationDuration = (8 + Math.random() * 12) + 's';
+    d.style.animationDelay = (Math.random() * 10) + 's';
+    d.style.fontSize = (1 + Math.random() * 1.5) + 'rem';
+    decoContainer.appendChild(d);
+  }
+
+  // Onboarding counter
+  let count = 0;
+  const target = 13;
+  const interval = setInterval(() => {
+    count++;
+    document.getElementById('counter').textContent = count;
+    const pct = ((count / 20000) * 100).toFixed(2);
+    document.getElementById('shock-bar').style.width = (count / 200) + '%';
+    document.getElementById('shock-percent').textContent = pct + '%';
+    document.getElementById('shock-text-val').textContent = pct + '%';
+    if (count >= target) clearInterval(interval);
+  }, 80);
+
+  // Books
+  const books = [
+    { emoji: '🏀', label: 'スポーツ', unlocked: true },
+    { emoji: '🎬', label: '映像制作', unlocked: true },
+    { emoji: '💻', label: 'IT・エンジニア', unlocked: true },
+    { emoji: '🌱', label: '地方創生', unlocked: true },
+    { emoji: '📊', label: 'マーケ', unlocked: true },
+    { emoji: '🎨', label: 'デザイン', unlocked: false },
+    { emoji: '🏥', label: '医療', unlocked: false },
+    { emoji: '✈️', label: '海外・旅', unlocked: false },
+    { emoji: '🍳', label: '料理・食', unlocked: false },
+    { emoji: '🔬', label: '研究・科学', unlocked: false },
+    { emoji: '📝', label: '教育', unlocked: false },
+    { emoji: '🎵', label: '音楽・芸術', unlocked: false },
+  ];
+
+  function renderShelf() {
+    const shelf = document.getElementById('bookshelf');
+    shelf.innerHTML = '';
+    books.forEach(b => {
+      const div = document.createElement('div');
+      div.className = 'book ' + (b.unlocked ? 'unlocked' : 'locked');
+      div.innerHTML = `<div class="book-emoji">${b.emoji}</div><div class="book-label">${b.label}</div>`;
+      if (b.unlocked) div.onclick = () => showToast('📖 ' + b.label + 'の本を開いたよ！');
+      shelf.appendChild(div);
+    });
+  }
+
+  function startApp() {
+    document.getElementById('screen-onboarding').classList.remove('active');
+    document.getElementById('screen-main').classList.add('active');
+    renderShelf();
+  }
+
+  function showParent() {
+    document.getElementById('screen-main').classList.remove('active');
+    document.getElementById('screen-parent').classList.add('active');
+  }
+
+  function showMain() {
+    document.getElementById('screen-parent').classList.remove('active');
+    document.getElementById('screen-main').classList.add('active');
+  }
+
+  function setNav(el) {
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  function switchTab(name, btn) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    if (btn) {
+      document.querySelectorAll('.switch-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+  }
+
+  function openDailyModal() { document.getElementById('modal-daily').classList.add('open'); }
+  function openWeeklyModal() { document.getElementById('modal-weekly').classList.add('open'); }
+  function openChallengeModal() { document.getElementById('modal-challenge').classList.add('open'); }
+  function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+  function completeDaily(btn) {
+    btn.classList.add('selected');
+    setTimeout(() => {
+      closeModal('modal-daily');
+      showToast('🎉 クエスト達成！本棚に1冊追加されたよ');
+    }, 500);
+  }
+
+  function startChat() {
+    closeModal('modal-weekly');
+    showToast('💬 田中さんとのマッチング開始！');
+  }
+
+  function selectChoice(btn) {
+    document.querySelectorAll('.choice-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    showToast('💡 あなたの価値観を記録したよ！');
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+  }
+</script>
+</body>
+</html>
